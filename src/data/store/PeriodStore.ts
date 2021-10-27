@@ -12,7 +12,5 @@ export default class PeriodStore {
 
     public setPeriods(periods: Period[]): void {
         this.periods = periods;
-
-        console.log('store', periods)
     }
 }

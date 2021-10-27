@@ -10,9 +10,7 @@ import { Wrapper } from './styles';
 const INITIAL_VALUES: FormData = {
     diseasesAmount: '',
     attributesAmount: '',
-    possibleValues: '',
     periodsAmount: '',
-    upperBound: '',
 }
 
 const Form: FC = () => {
@@ -39,27 +37,11 @@ const Form: FC = () => {
                         required
                     />
                     <TextField
-                        name="possibleValues"
-                        type="number"
-                        label="Возможные значения"
-                        variant="outlined"
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 2, max: 99, }}
-                        required
-                    />
-                    <TextField
                         name="periodsAmount"
                         type="number"
                         label="Число периодов динамики"
                         variant="outlined"
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 1, max: 5, }}
-                        required
-                    />
-                    <TextField
-                        name="upperBound"
-                        type="number"
-                        label="Верхняя граница периодов"
-                        variant="outlined"
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 2, max: 12, }}
                         required
                     />
                     <Button variant="contained" type="submit" color="primary" >Сгенерировать</Button>

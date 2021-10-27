@@ -6,8 +6,8 @@ export default class GenerateAttributesUseCase {
     @inject(AttributeRepository)
     private readonly attributeRepository!: AttributeRepository;
 
-    public execute(attributesAmount: number, possibleValues: number) {
-        const attributes = this.attributeRepository.generateAttributes(attributesAmount, possibleValues);
+    public execute(attributesAmount: number) {
+        const attributes = this.attributeRepository.generateAttributes(attributesAmount);
 
         this.attributeRepository.setAttributes(attributes);
     }

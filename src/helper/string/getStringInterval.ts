@@ -1,13 +1,13 @@
-const getStringInterval = (interval: number[]): string => {
-    const intervalLength = interval.length;
-    const firsElement = interval[0];
-    const lastElement = interval[intervalLength - 1];
+import Value from 'domain/entity/attribute/Value';
 
-    if (intervalLength === 1) {
-        return `${firsElement}`;
+const getStringInterval = (value: Value): string => {
+    const { from, to } = value;
+
+    if (from === to) {
+        return `${from}`;
     }
 
-    return `[${firsElement}, ${lastElement}]`;
+    return `[${from}, ${to}]`;
 }
 
 export default getStringInterval;

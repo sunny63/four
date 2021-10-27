@@ -28,7 +28,7 @@ const Tables: FC = () => {
                     textColor="primary"
                     indicatorColor="primary"
                 >
-                    <Tab label="Периоды" />
+                    <Tab label="ЗДП" />
                     <Tab label="Классы" />
                     <Tab label="Признаки" />
                     <Tab label="Возможные/Нормальные значения" />

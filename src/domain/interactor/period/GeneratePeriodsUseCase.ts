@@ -2,6 +2,7 @@ import { injectable, inject } from 'inversify';
 import { v4 } from 'uuid';
 import Period from 'domain/entity/period/Period';
 import Bound from 'domain/entity/period/Bound';
+import Value from 'domain/entity/attribute/Value';
 import PeriodRepository from 'domain/repository/period/PeriodRepository';
 import DiseaseRepository from 'domain/repository/disease/DiseaseRepository';
 import AttributeRepository from 'domain/repository/attribute/AttributeRepository';
@@ -19,15 +20,16 @@ export default class GeneratePeriodsUseCase {
     private readonly attributeRepository!: AttributeRepository;
 
     // eslint-disable-next-line class-methods-use-this
-    private getValuesForPeriod(periodAmount: number, possibleValuesAmount: number): number[] {
+    private getValuesForPeriod(periodAmount: number, possibleValues: Value): number[] {
+        const { from, to } = possibleValues;
         let prevValue = -1;
         const values: number[] = [];
 
         for (let i = 0; i < periodAmount; i++) {
-            let currentValue = randomNumber(1, possibleValuesAmount - 1);
+            let currentValue = randomNumber(from, to - 1);
 
             while (currentValue === prevValue) {
-                currentValue = randomNumber(1, possibleValuesAmount - 1);
+                currentValue = randomNumber(1, to - 1);
             }
 
             prevValue = currentValue;
@@ -55,7 +57,7 @@ export default class GeneratePeriodsUseCase {
         return bounds;
     }
 
-    public execute(periodsAmount: number, upperBound: number) {
+    public execute(periodsAmount: number) {
         const periods: Period[] = [];
         const diseases = this.diseaseRepository.getDiseases();
         const attributes = this.attributeRepository.getAttributes();
@@ -64,8 +66,8 @@ export default class GeneratePeriodsUseCase {
             attributes.forEach(attribute => {
                 const { possibleValues } = attribute;
                 const periodAmount = randomNumber(1, periodsAmount);
-                const valuesForPeriod = this.getValuesForPeriod(periodAmount, possibleValues.length);
-                const boundsForPeriod = this.getBoundsForPeriod(periodAmount, upperBound);
+                const valuesForPeriod = this.getValuesForPeriod(periodAmount, possibleValues);
+                const boundsForPeriod = this.getBoundsForPeriod(periodAmount, 12);
                 const period = new Period(
                     v4(),
                     disease,
@@ -74,6 +76,8 @@ export default class GeneratePeriodsUseCase {
                     valuesForPeriod,
                     boundsForPeriod,
                 );
+
+                console.log('period');
 
                 periods.push(period);
             })

@@ -44,14 +44,12 @@ export default class AppController {
         const {
             diseasesAmount,
             attributesAmount,
-            possibleValues,
             periodsAmount,
-            upperBound,
         } = formData;
 
         this.generateDiseasesUseCase.execute(Number(diseasesAmount));
-        this.generateAttributesUseCase.execute(Number(attributesAmount), Number(possibleValues));
-        this.generatePeriodsUseCase.execute(Number(periodsAmount), Number(upperBound));
+        this.generateAttributesUseCase.execute(Number(attributesAmount));
+        this.generatePeriodsUseCase.execute(Number(periodsAmount));
         this.stepInteractor.setShowTablesStep();
     }
 

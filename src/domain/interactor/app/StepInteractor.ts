@@ -14,4 +14,8 @@ export default class StepInteractor {
     public setShowTablesStep() {
         this.appRepository.setStep(Step.ShowTables);
     }
+
+    public setLoadStateStep() {
+        this.appRepository.setStep(Step.LoadState);
+    }
 }

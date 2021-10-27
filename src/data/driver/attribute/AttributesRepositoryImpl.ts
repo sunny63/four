@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { v4 } from 'uuid';
 import Attribute from 'domain/entity/attribute/Attribute';
+import Value from 'domain/entity/attribute/Value';
 import AttributeRepository from 'domain/repository/attribute/AttributeRepository';
 import AttributesStore from 'data/store/AttributesStore';
 import randomNumber from 'helper/common/randomNumber';
@@ -20,36 +21,39 @@ export default class AttributesRepositoryImpl implements AttributeRepository {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    private getPossibleValues(possibleValues: number): number[] {
-        const valuesAmount = randomNumber(2, possibleValues);
-        const values: number[] = [];
+    private getPossibleValues(): Value {
+        const max = randomNumber(3, 99);
+        let min = randomNumber(2, max);
 
-        for (let i = 0; i < valuesAmount; i++) {
-            values.push(i);
+        while (min !== max) {
+            min = randomNumber(2, max);
         }
 
-        return values;
+        return {
+            from: min,
+            to: max,
+        };
     }
 
     // eslint-disable-next-line class-methods-use-this
-    private getNormalValues(normalValues: number): number[] {
-        const valuesAmount = randomNumber(1, normalValues);
-        const values: number[] = [];
+    private getNormalValues(possibleValues: Value): Value {
+        const { from, to } = possibleValues;
+        const max = randomNumber(from, to);
+        const min = randomNumber(from, max);
 
-        for (let i = 0; i < valuesAmount; i++) {
-            values.push(i);
-        }
-
-        return values;
+        return {
+            from: min,
+            to: max,
+        };
     }
 
-    public generateAttributes(attributesAmount: number, possibleValuesAmount: number): Attribute[] {
+    public generateAttributes(attributesAmount: number): Attribute[] {
         const attributes: Attribute[] = [];
 
         for (let i = 1; i <= attributesAmount; i++) {
             const attributeName = `${ATTRIBUTE_NAME}${i}`;
-            const possibleValues = this.getPossibleValues(possibleValuesAmount);
-            const normalValues = this.getNormalValues(possibleValues.length - 1);
+            const possibleValues = this.getPossibleValues();
+            const normalValues = this.getNormalValues(possibleValues);
             const attribute = new Attribute(v4(), attributeName, possibleValues, normalValues);
 
             attributes.push(attribute);
