@@ -77,8 +77,6 @@ export default class GeneratePeriodsUseCase {
                     boundsForPeriod,
                 );
 
-                console.log('period');
-
                 periods.push(period);
             })
         })
