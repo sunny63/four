@@ -8,11 +8,11 @@ import TextField from 'presentation/component/common/formik/TextField';
 import { Wrapper } from './styles';
 
 const INITIAL_VALUES: FormData = {
-    diseasesAmount: 0,
-    attributesAmount: 0,
-    possibleValues: 0,
-    periodsAmount: 0,
-    upperBound: 0,
+    diseasesAmount: '',
+    attributesAmount: '',
+    possibleValues: '',
+    periodsAmount: '',
+    upperBound: '',
 }
 
 const Form: FC = () => {
@@ -62,7 +62,7 @@ const Form: FC = () => {
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 2, max: 12, }}
                         required
                     />
-                    <Button variant="contained" type="submit" >Сгенерировать</Button>
+                    <Button variant="contained" type="submit" color="primary" >Сгенерировать</Button>
                 </Wrapper>
             </FormikForm>
         </Formik>
