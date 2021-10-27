@@ -1,37 +1,29 @@
-import React, { ChangeEvent, ChangeEventHandler, FC, useState } from 'react';
-import { Form as FormikForm, Formik, FormikValues } from 'formik';
-// import TextField from '@material-ui/core/TextField';
+import React, { FC } from 'react';
+import { Form as FormikForm, Formik } from 'formik';
 import Button from '@material-ui/core/Button';
+import FormData from 'domain/entity/app/FormData';
+import { useService } from 'presentation/context/Container';
+import AppController from 'presentation/controller/app/AppController';
 import TextField from 'presentation/component/common/formik/TextField';
 import { Wrapper } from './styles';
 
+const INITIAL_VALUES: FormData = {
+    diseasesAmount: 0,
+    attributesAmount: 0,
+    possibleValues: 0,
+    periodsAmount: 0,
+    upperBound: 0,
+}
+
 const Form: FC = () => {
-    const [possibleValues, setPossibleValues] = useState<number>(99);
-    const [upperBound, setUpperBound] = useState<number>(12);
-
-    const handlePossibleValuesChange: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.currentTarget;
-
-        setPossibleValues(Number.parseInt(value, 10));
-    }
-
-    const handleUpperBoundChange: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.currentTarget;
-
-        setUpperBound(Number.parseInt(value, 10));
-    }
-
-    const handleSubmit = (values: FormikValues) => {
-        console.log('submit');
-        console.log({values});
-    }
+    const { handleFormSubmit } = useService(AppController);
 
     return (
-        <Formik initialValues={{}} onSubmit={handleSubmit} >
+        <Formik initialValues={INITIAL_VALUES} onSubmit={handleFormSubmit} >
             <FormikForm>
                 <Wrapper>
                     <TextField
-                        name="numberOfClasses"
+                        name="diseasesAmount"
                         type="number"
                         label="Число классов"
                         variant="outlined"
@@ -39,7 +31,7 @@ const Form: FC = () => {
                         required
                     />
                     <TextField
-                        name="numberOfFeatures"
+                        name="attributesAmount"
                         type="number"
                         label="Число Признаков"
                         variant="outlined"
@@ -51,20 +43,11 @@ const Form: FC = () => {
                         type="number"
                         label="Возможные значения"
                         variant="outlined"
-                        onChange={handlePossibleValuesChange}
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 2, max: 99, }}
                         required
                     />
                     <TextField
-                        name="normalValues"
-                        type="number"
-                        label="Нормальные значения"
-                        variant="outlined"
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 1, max: possibleValues - 1, }}
-                        required
-                    />
-                    <TextField
-                        name="numberOfPeriods"
+                        name="periodsAmount"
                         type="number"
                         label="Число периодов динамики"
                         variant="outlined"
@@ -72,28 +55,11 @@ const Form: FC = () => {
                         required
                     />
                     <TextField
-                        name="valuesForPeriods"
-                        type="number"
-                        label="Значения для периодов"
-                        variant="outlined"
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 1, max: possibleValues - 1, }}
-                        required
-                    />
-                    <TextField
                         name="upperBound"
                         type="number"
                         label="Верхняя граница периодов"
                         variant="outlined"
-                        onChange={handleUpperBoundChange}
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 2, max: 12, }}
-                        required
-                    />
-                    <TextField
-                        name="lowerBound"
-                        type="number"
-                        label="Нижняя граница периодов"
-                        variant="outlined"
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 1, max: upperBound - 1, }}
                         required
                     />
                     <Button variant="contained" type="submit" >Сгенерировать</Button>
