@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import getStringInterval from 'helper/string/getStringInterval';
 import Period from 'domain/entity/period/Period';
 
 type PropsT = {
     period: Period;
-}
+};
 
 const Row: FC<PropsT> = (props) => {
     const { period } = props;
@@ -23,7 +24,7 @@ const Row: FC<PropsT> = (props) => {
             </TableCell>
             <TableCell>
                 {values.map((value) => (
-                    <TableRow>{value}</TableRow>
+                    <TableRow>{getStringInterval(value)}</TableRow>
                 ))}
             </TableCell>
             <TableCell>

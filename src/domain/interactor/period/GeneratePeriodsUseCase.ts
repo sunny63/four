@@ -7,6 +7,7 @@ import PeriodRepository from 'domain/repository/period/PeriodRepository';
 import DiseaseRepository from 'domain/repository/disease/DiseaseRepository';
 import AttributeRepository from 'domain/repository/attribute/AttributeRepository';
 import randomNumber from 'helper/common/randomNumber';
+import getRandomRange from 'helper/common/getRandomRange';
 
 @injectable()
 export default class GeneratePeriodsUseCase {
@@ -20,16 +21,19 @@ export default class GeneratePeriodsUseCase {
     private readonly attributeRepository!: AttributeRepository;
 
     // eslint-disable-next-line class-methods-use-this
-    private getValuesForPeriod(periodAmount: number, possibleValues: Value): number[] {
-        const { from, to } = possibleValues;
-        let prevValue = -1;
-        const values: number[] = [];
+    private getValuesForPeriod(periodAmount: number, possibleValues: Value): Value[] {
+        const { to } = possibleValues;
+        let prevValue: Value = {
+            from: -1,
+            to: -1,
+        };
+        const values: Value[] = [];
 
         for (let i = 0; i < periodAmount; i++) {
-            let currentValue = randomNumber(from, to - 1);
+            let currentValue: Value = getRandomRange(1, to - 1);
 
-            while (currentValue === prevValue) {
-                currentValue = randomNumber(1, to - 1);
+            while (currentValue.from === prevValue.from && currentValue.to === prevValue.to) {
+                currentValue = getRandomRange(1, to - 1);
             }
 
             prevValue = currentValue;
@@ -62,8 +66,8 @@ export default class GeneratePeriodsUseCase {
         const diseases = this.diseaseRepository.getDiseases();
         const attributes = this.attributeRepository.getAttributes();
 
-        diseases.forEach(disease => {
-            attributes.forEach(attribute => {
+        diseases.forEach((disease) => {
+            attributes.forEach((attribute) => {
                 const { possibleValues } = attribute;
                 const periodAmount = randomNumber(1, periodsAmount);
                 const valuesForPeriod = this.getValuesForPeriod(periodAmount, possibleValues);
@@ -78,8 +82,8 @@ export default class GeneratePeriodsUseCase {
                 );
 
                 periods.push(period);
-            })
-        })
+            });
+        });
 
         this.periodRepository.setPeriods(periods);
     }
