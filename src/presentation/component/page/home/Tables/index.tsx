@@ -19,7 +19,6 @@ import { NavBox, ButtonsContainer } from './styles';
 
 const Tables: FC = observer(() => {
     const {
-        setInputDataStep,
         getAttributesForDownloading,
         getAmountOfPeriodsForDownloading,
         getPeriodsForDownloading,
@@ -71,9 +70,6 @@ const Tables: FC = observer(() => {
                     <Tab label="ЗДП" />
                 </Tabs>
                 <ButtonsContainer>
-                    <Button type="button" color="primary" onClick={setInputDataStep}>
-                        Генрация
-                    </Button>
                     <Button
                         type="button"
                         color="primary"

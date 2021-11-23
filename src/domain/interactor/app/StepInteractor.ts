@@ -1,4 +1,4 @@
-import {inject, injectable} from 'inversify';
+import { inject, injectable } from 'inversify';
 import Step from 'domain/entity/app/Step';
 import AppRepository from 'domain/repository/app/AppRepository';
 
@@ -9,6 +9,14 @@ export default class StepInteractor {
 
     public setInputDataStep() {
         this.appRepository.setStep(Step.InputData);
+    }
+
+    public setGeneration2Step() {
+        this.appRepository.setStep(Step.Generation2);
+    }
+
+    public setShowDiseaseHistoriesStep() {
+        this.appRepository.setStep(Step.ShowDiseaseHistories);
     }
 
     public setShowTablesStep() {

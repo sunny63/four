@@ -9,14 +9,18 @@ import Attribute from 'domain/entity/attribute/Attribute';
 import AttributeForDownloading from 'domain/entity/attribute/AttributeForDownloading';
 import AmountOfPeriods from 'domain/entity/AmountOfPeriods';
 import Step from 'domain/entity/app/Step';
+import DiseaseHistory from 'domain/entity/diseaseHistory/DiseaseHistory';
+import DiseaseHistoriesFormData from 'domain/entity/diseaseHistory/DiseaseHistoriesFormData';
 import AppRepository from 'domain/repository/app/AppRepository';
 import PeriodRepository from 'domain/repository/period/PeriodRepository';
 import DiseaseRepository from 'domain/repository/disease/DiseaseRepository';
 import AttributeRepository from 'domain/repository/attribute/AttributeRepository';
+import DiseaseHistoryRepository from 'domain/repository/diseaseHistory/DiseaseHistoryRepository';
 import GenerateDiseasesUseCase from 'domain/interactor/disease/GenerateDiseasesUseCase';
 import GenerateAttributesUseCase from 'domain/interactor/attribute/GenerateAttributesUseCase';
 import GeneratePeriodsUseCase from 'domain/interactor/period/GeneratePeriodsUseCase';
 import StepInteractor from 'domain/interactor/app/StepInteractor';
+import GenerateDiseasesHistoriesUseCase from 'domain/interactor/diseaseHistory/GenerateDiseasesHistoriesUseCase';
 
 @injectable()
 export default class AppController {
@@ -44,6 +48,12 @@ export default class AppController {
     @inject(StepInteractor)
     private readonly stepInteractor!: StepInteractor;
 
+    @inject(DiseaseHistoryRepository)
+    private readonly diseaseHistoryRepository!: DiseaseHistoryRepository;
+
+    @inject(GenerateDiseasesHistoriesUseCase)
+    private readonly generateDiseasesHistoriesUseCase!: GenerateDiseasesHistoriesUseCase;
+
     public handleFormSubmit: SubmitHandlerT<FormData> = (formData) => {
         const { diseasesAmount, attributesAmount, periodsAmount } = formData;
 
@@ -53,8 +63,21 @@ export default class AppController {
         this.stepInteractor.setShowTablesStep();
     };
 
+    public handleDiseaseHistoriesFormHandle: SubmitHandlerT<DiseaseHistoriesFormData> = (
+        formData,
+    ) => {
+        const { diseaseHistoriesAmount } = formData;
+
+        this.generateDiseasesHistoriesUseCase.execute(Number(diseaseHistoriesAmount));
+        this.stepInteractor.setShowDiseaseHistoriesStep();
+    };
+
     public setInputDataStep = (): void => {
         this.stepInteractor.setInputDataStep();
+    };
+
+    public setGeneration2Step = (): void => {
+        this.stepInteractor.setGeneration2Step();
     };
 
     public getAttributesForDownloading = async (
@@ -133,6 +156,10 @@ export default class AppController {
 
     public get attributes(): Attribute[] {
         return this.attributeRepository.getAttributes();
+    }
+
+    public get diseaseHistories(): DiseaseHistory[] {
+        return this.diseaseHistoryRepository.getDiseasesHistories();
     }
 
     public get user() {
