@@ -22,6 +22,7 @@ const Tables: FC = observer(() => {
         getAttributesForDownloading,
         getAmountOfPeriodsForDownloading,
         getPeriodsForDownloading,
+        setInputDataStep,
         periods,
         attributes,
     } = useService(AppController);
@@ -70,6 +71,9 @@ const Tables: FC = observer(() => {
                     <Tab label="ЗДП" />
                 </Tabs>
                 <ButtonsContainer>
+                    <Button type="button" color="primary" onClick={setInputDataStep}>
+                        Генрация
+                    </Button>
                     <Button
                         type="button"
                         color="primary"

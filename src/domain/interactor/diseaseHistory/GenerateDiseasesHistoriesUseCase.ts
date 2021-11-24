@@ -21,12 +21,11 @@ export default class GenerateDiseasesHistoriesUseCase {
         for (let i = 0; i < diseaseHistoriesAmount; i++) {
             periods.forEach((period) => {
                 const { values, bounds } = period;
-                const diseaseHistory = new DiseaseHistory(v4(), period);
 
                 bounds?.forEach(({ upperBound, lowerBound }, index) => {
                     const { from, to } = values[index];
                     const periodDuration = randomNumber(lowerBound, upperBound);
-                    const momentOfObservation = new MomentOfObservation();
+                    const diseaseHistory = new DiseaseHistory(v4(), period, index, periodDuration);
                     let momentsOfObservationDurationCounter = periodDuration;
 
                     while (momentsOfObservationDurationCounter > 0) {
@@ -35,17 +34,17 @@ export default class GenerateDiseasesHistoriesUseCase {
                             momentsOfObservationDurationCounter,
                         );
                         const momentOfObservationValue = randomNumber(from, to);
+                        const momentOfObservation = new MomentOfObservation(
+                            momentOfObservationDuration,
+                            momentOfObservationValue,
+                        );
 
-                        momentOfObservation.duration.push(momentOfObservationDuration);
-                        momentOfObservation.values.push(momentOfObservationValue);
+                        diseaseHistory.momentsOfObservation.push(momentOfObservation);
                         momentsOfObservationDurationCounter -= momentOfObservationDuration;
                     }
 
-                    diseaseHistory.periodDuration.push(periodDuration);
-                    diseaseHistory.momentsOfObservation.push(momentOfObservation);
+                    diseaseHistories.push(diseaseHistory);
                 });
-
-                diseaseHistories.push(diseaseHistory);
             });
         }
 

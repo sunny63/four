@@ -1,6 +1,6 @@
 enum Step {
     InputData,
-    Generation2,
+    SampleGeneration,
     ShowTables,
     ShowDiseaseHistories,
     LoadState,

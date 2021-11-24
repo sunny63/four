@@ -5,7 +5,8 @@ export default class DiseaseHistory {
     constructor(
         public readonly id: string,
         public readonly period: Period,
-        public readonly periodDuration: number[] = [],
+        public readonly periodNumber: number,
+        public readonly periodDuration: number,
         public readonly momentsOfObservation: MomentOfObservation[] = [],
     ) {}
 }

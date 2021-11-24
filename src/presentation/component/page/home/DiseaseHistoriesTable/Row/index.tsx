@@ -9,8 +9,8 @@ type PropsT = {
 
 const Row: FC<PropsT> = (props) => {
     const { diseaseHistory } = props;
-    const { period, periodDuration, momentsOfObservation } = diseaseHistory;
-    const { disease, attribute, amount, values } = period;
+    const { period, periodDuration, momentsOfObservation, periodNumber } = diseaseHistory;
+    const { disease, attribute, amount } = period;
 
     return (
         <TableRow>
@@ -18,19 +18,13 @@ const Row: FC<PropsT> = (props) => {
             <TableCell>{attribute.name}</TableCell>
             <TableCell>{amount}</TableCell>
             <TableCell>
-                {values.map((_, index) => (
-                    <TableRow>{index + 1}</TableRow>
-                ))}
+                <TableRow>{periodNumber + 1}</TableRow>
             </TableCell>
             <TableCell>
-                {periodDuration.map((_, index) => (
-                    <TableRow>{index + 1}</TableRow>
-                ))}
+                <TableRow>{periodDuration}</TableRow>
             </TableCell>
             <TableCell>
-                {momentsOfObservation.map((moment) => (
-                    <TableRow>{moment.values.length}</TableRow>
-                ))}
+                <TableRow>{momentsOfObservation.length}</TableRow>
             </TableCell>
             <TableCell>
                 {momentsOfObservation.map((_, index) => (
@@ -39,20 +33,12 @@ const Row: FC<PropsT> = (props) => {
             </TableCell>
             <TableCell>
                 {momentsOfObservation.map(({ duration }) => (
-                    <TableRow>
-                        {duration.map((dur) => (
-                            <TableRow>{dur}</TableRow>
-                        ))}
-                    </TableRow>
+                    <TableRow>{duration}</TableRow>
                 ))}
             </TableCell>
             <TableCell>
-                {momentsOfObservation.map(({ values: momentValues }) => (
-                    <TableRow>
-                        {momentValues.map((value) => (
-                            <TableRow>{value}</TableRow>
-                        ))}
-                    </TableRow>
+                {momentsOfObservation.map(({ value }) => (
+                    <TableRow>{value}</TableRow>
                 ))}
             </TableCell>
         </TableRow>

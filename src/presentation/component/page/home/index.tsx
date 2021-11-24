@@ -12,14 +12,28 @@ import Tables from './Tables';
 import DiseaseHistoriesTable from './DiseaseHistoriesTable';
 
 const HomePage = observer(() => {
-    const { step, setInputDataStep, setGeneration2Step } = useService(AppController);
+    const {
+        step,
+        setInputDataStep,
+        setSampleGenerationStep,
+        setShowTablesStep,
+        setShowDiseaseHistoriesStep,
+        periods,
+        diseaseHistories,
+    } = useService(AppController);
     const [value, setValue] = useState<number>(0);
 
     const handleChange = (newValue: number) => {
         setValue(newValue);
 
         if (newValue) {
-            setGeneration2Step();
+            if (diseaseHistories.length > 0) {
+                setShowDiseaseHistoriesStep();
+            } else {
+                setSampleGenerationStep();
+            }
+        } else if (periods.length > 0) {
+            setShowTablesStep();
         } else {
             setInputDataStep();
         }
@@ -33,11 +47,11 @@ const HomePage = observer(() => {
                 textColor="primary"
                 indicatorColor="primary"
             >
-                <Tab label="Генерация 1" />
-                <Tab label="Генерация 2" />
+                <Tab label="Генерация базы знаний" />
+                <Tab label="Генерация выборки" />
             </Tabs>
             {step === Step.InputData && <Form />}
-            {step === Step.Generation2 && <DiseaseHistoriesForm />}
+            {step === Step.SampleGeneration && <DiseaseHistoriesForm />}
             {step === Step.ShowTables && <Tables />}
             {step === Step.ShowDiseaseHistories && <DiseaseHistoriesTable />}
         </Layout>

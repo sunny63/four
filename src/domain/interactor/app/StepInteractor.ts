@@ -11,8 +11,8 @@ export default class StepInteractor {
         this.appRepository.setStep(Step.InputData);
     }
 
-    public setGeneration2Step() {
-        this.appRepository.setStep(Step.Generation2);
+    public setSampleGenerationStep() {
+        this.appRepository.setStep(Step.SampleGeneration);
     }
 
     public setShowDiseaseHistoriesStep() {

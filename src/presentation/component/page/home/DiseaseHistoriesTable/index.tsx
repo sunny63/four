@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import { useService } from 'presentation/context/Container';
 import AppController from 'presentation/controller/app/AppController';
 import Row from './Row';
+import { Wrapper, Button } from './styles';
 
 interface Column {
     id:
@@ -39,7 +40,7 @@ const COLUMNS: Column[] = [
 ];
 
 const DiseaseHistoriesTable = observer(() => {
-    const { diseaseHistories } = useService(AppController);
+    const { diseaseHistories, setSampleGenerationStep } = useService(AppController);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -53,35 +54,40 @@ const DiseaseHistoriesTable = observer(() => {
     };
 
     return (
-        <Paper>
-            <TableContainer component={Paper}>
-                <Table stickyHeader>
-                    <TableHead>
-                        <TableRow>
-                            {COLUMNS.map(({ id, label }) => (
-                                <TableCell key={id}>{label}</TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {diseaseHistories
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((diseaseHistory) => (
-                                <Row key={diseaseHistory.id} diseaseHistory={diseaseHistory} />
-                            ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={diseaseHistories.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-        </Paper>
+        <Wrapper>
+            <Button type="button" color="primary" onClick={setSampleGenerationStep}>
+                Генрация
+            </Button>
+            <Paper>
+                <TableContainer component={Paper}>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                {COLUMNS.map(({ id, label }) => (
+                                    <TableCell key={id}>{label}</TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {diseaseHistories
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((diseaseHistory) => (
+                                    <Row key={diseaseHistory.id} diseaseHistory={diseaseHistory} />
+                                ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={diseaseHistories.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Paper>
+        </Wrapper>
     );
 });
 

@@ -76,8 +76,16 @@ export default class AppController {
         this.stepInteractor.setInputDataStep();
     };
 
-    public setGeneration2Step = (): void => {
-        this.stepInteractor.setGeneration2Step();
+    public setSampleGenerationStep = (): void => {
+        this.stepInteractor.setSampleGenerationStep();
+    };
+
+    public setShowTablesStep = (): void => {
+        this.stepInteractor.setShowTablesStep();
+    };
+
+    public setShowDiseaseHistoriesStep = (): void => {
+        this.stepInteractor.setShowDiseaseHistoriesStep();
     };
 
     public getAttributesForDownloading = async (
