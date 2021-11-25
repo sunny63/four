@@ -6,6 +6,7 @@ import { useService } from 'presentation/context/Container';
 import Step from 'domain/entity/app/Step';
 import AppController from 'presentation/controller/app/AppController';
 import Layout from 'presentation/component/layout/Main';
+import Loader from 'presentation/component/common/block/Loader';
 import DiseaseHistoriesForm from './DiseaseHistoriesForm';
 import Form from './Form';
 import Tables from './Tables';
@@ -55,6 +56,7 @@ const HomePage = observer(() => {
             {step === Step.SampleGeneration && <DiseaseHistoriesForm />}
             {step === Step.ShowTables && <Tables />}
             {step === Step.ShowDiseaseHistories && <DiseaseHistoriesTable />}
+            {step === Step.LoadState && <Loader />}
         </Layout>
     );
 });

@@ -14,4 +14,12 @@ export default class DiseaseHistoryRepositoryImpl implements DiseaseHistoryRepos
     public setDiseaseHistories(diseaseHistories: DiseaseHistory[]) {
         this.store.setDiseaseHistories(diseaseHistories);
     }
+
+    public getAmount(): number {
+        return this.store.amount;
+    }
+
+    public setAmount(amount: number) {
+        this.store.setAmount(amount);
+    }
 }
