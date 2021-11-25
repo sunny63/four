@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
@@ -43,6 +43,17 @@ const DiseaseHistoriesTable = observer(() => {
     const { diseaseHistories, setSampleGenerationStep } = useService(AppController);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    useEffect(() => {
+        const worker = new Worker('./deep-thought.ts');
+        worker.postMessage({
+            question:
+                'The Answer to the Ultimate Question of Life, The Universe, and Everything.',
+        });
+        worker.onmessage = ({ data: { answer } }) => {
+            console.log(answer);
+        };
+    }, []);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
