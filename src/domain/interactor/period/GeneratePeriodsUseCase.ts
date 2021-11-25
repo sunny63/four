@@ -22,7 +22,7 @@ export default class GeneratePeriodsUseCase {
 
     // eslint-disable-next-line class-methods-use-this
     private getValuesForPeriod(periodAmount: number, possibleValues: Value): Value[] {
-        const { to } = possibleValues;
+        const { from, to } = possibleValues;
         let prevValue: Value = {
             from: -1,
             to: -1,
@@ -30,10 +30,15 @@ export default class GeneratePeriodsUseCase {
         const values: Value[] = [];
 
         for (let i = 0; i < periodAmount; i++) {
-            let currentValue: Value = getRandomRange(1, to - 1);
+            let currentValue: Value;
+            const { from: prevFrom, to: prevTo } = prevValue;
 
-            while (currentValue.from === prevValue.from && currentValue.to === prevValue.to) {
-                currentValue = getRandomRange(1, to - 1);
+            if (prevFrom === -1) {
+                currentValue = getRandomRange(from, to - 1);
+            } else if (prevFrom - from > to - 1 - prevTo) {
+                currentValue = getRandomRange(from, prevFrom - 1);
+            } else {
+                currentValue = getRandomRange(prevTo + 1, to - 1);
             }
 
             prevValue = currentValue;

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import React, { Component, ComponentType, createContext, useContext } from 'react';
 import { interfaces } from 'inversify';
 import Container from 'framework/Container';

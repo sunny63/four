@@ -22,6 +22,7 @@ const HomePage = observer(() => {
         diseaseHistories,
     } = useService(AppController);
     const [value, setValue] = useState<number>(0);
+    const hasPeriods = periods.length > 0;
 
     const handleChange = (newValue: number) => {
         setValue(newValue);
@@ -32,7 +33,7 @@ const HomePage = observer(() => {
             } else {
                 setSampleGenerationStep();
             }
-        } else if (periods.length > 0) {
+        } else if (hasPeriods) {
             setShowTablesStep();
         } else {
             setInputDataStep();
@@ -48,7 +49,7 @@ const HomePage = observer(() => {
                 indicatorColor="primary"
             >
                 <Tab label="Генерация базы знаний" />
-                <Tab label="Генерация выборки" />
+                <Tab label="Генерация выборки" disabled={!hasPeriods} />
             </Tabs>
             {step === Step.InputData && <Form />}
             {step === Step.SampleGeneration && <DiseaseHistoriesForm />}

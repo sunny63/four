@@ -56,7 +56,7 @@ const DiseaseHistoriesTable = observer(() => {
     return (
         <Wrapper>
             <Button type="button" color="primary" onClick={setSampleGenerationStep}>
-                Генрация
+                Генерация
             </Button>
             <Paper>
                 <TableContainer component={Paper}>

@@ -72,7 +72,7 @@ const Tables: FC = observer(() => {
                 </Tabs>
                 <ButtonsContainer>
                     <Button type="button" color="primary" onClick={setInputDataStep}>
-                        Генрация
+                        Генерация
                     </Button>
                     <Button
                         type="button"
