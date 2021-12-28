@@ -4,6 +4,7 @@ import MomentOfObservation from 'domain/entity/diseaseHistory/MomentOfObservatio
 export default class DiseaseHistory {
     constructor(
         public readonly id: string,
+        public readonly index: number,
         public readonly period: Period,
         public readonly periodNumber: number,
         public readonly periodDuration: number,

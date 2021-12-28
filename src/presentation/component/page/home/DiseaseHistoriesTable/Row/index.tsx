@@ -9,28 +9,14 @@ type PropsT = {
 
 const Row: FC<PropsT> = (props) => {
     const { diseaseHistory } = props;
-    const { period, periodDuration, momentsOfObservation, periodNumber } = diseaseHistory;
-    const { disease, attribute, amount } = period;
+    const { index, period, momentsOfObservation } = diseaseHistory;
+    const { disease, attribute } = period;
 
     return (
         <TableRow>
+            <TableCell>{index}</TableCell>
             <TableCell>{disease.name}</TableCell>
             <TableCell>{attribute.name}</TableCell>
-            <TableCell>{amount}</TableCell>
-            <TableCell>
-                <TableRow>{periodNumber + 1}</TableRow>
-            </TableCell>
-            <TableCell>
-                <TableRow>{periodDuration}</TableRow>
-            </TableCell>
-            <TableCell>
-                <TableRow>{momentsOfObservation.length}</TableRow>
-            </TableCell>
-            <TableCell>
-                {momentsOfObservation.map((_, index) => (
-                    <TableRow>{index + 1}</TableRow>
-                ))}
-            </TableCell>
             <TableCell>
                 {momentsOfObservation.map(({ duration }) => (
                     <TableRow>{duration}</TableRow>

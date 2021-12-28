@@ -74,6 +74,7 @@ export default class AppController {
 
     public setSampleGenerationStep = (): void => {
         this.stepInteractor.setSampleGenerationStep();
+        this.diseaseHistoryRepository.setDiseaseHistories([]);
     };
 
     public setShowTablesStep = (): void => {
@@ -150,6 +151,10 @@ export default class AppController {
         return periodsForDownloading;
     };
 
+    public setDiseaseHistories = (diseaseHistories: DiseaseHistory[]) => {
+        this.diseaseHistoryRepository.setDiseaseHistories(diseaseHistories);
+    };
+
     public get step(): Step {
         return this.appRepository.getStep();
     }
@@ -172,6 +177,10 @@ export default class AppController {
 
     public get diseaseHistoriesAmount(): number {
         return this.diseaseHistoryRepository.getAmount();
+    }
+
+    public get hasHistories(): boolean {
+        return this.diseaseHistoryRepository.getDiseasesHistories().length > 0;
     }
 
     public get user() {

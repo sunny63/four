@@ -16,48 +16,47 @@ import Row from './Row';
 import { Wrapper, Button } from './styles';
 
 interface Column {
-    id:
-        | 'disease'
-        | 'attribute'
-        | 'amount'
-        | 'numberOfPeriod'
-        | 'periodDuration'
-        | 'momentsAmount'
-        | 'numberOfMoment'
-        | 'momentDuration'
-        | 'momentValue';
+    id: 'numberOfHistory' | 'disease' | 'attribute' | 'momentDuration' | 'momentValue';
     label: string;
 }
 
 const COLUMNS: Column[] = [
+    { id: 'numberOfHistory', label: 'Номер истории болезни' },
     { id: 'disease', label: 'Класс' },
     { id: 'attribute', label: 'Признак' },
-    { id: 'amount', label: 'ЧПД' },
-    { id: 'numberOfPeriod', label: 'Номер пер.' },
-    { id: 'periodDuration', label: 'Длительность периода' },
-    { id: 'momentsAmount', label: 'Число моментов наблюдения' },
-    { id: 'numberOfMoment', label: 'Номер момента' },
-    { id: 'momentDuration', label: 'Длительность момента' },
+    { id: 'momentDuration', label: 'Момент наблюдения' },
     { id: 'momentValue', label: 'Значение признака' },
 ];
 
 const DiseaseHistoriesTable = observer(() => {
-    const { diseaseHistoriesAmount, setSampleGenerationStep, periods } = useService(AppController);
+    const {
+        diseaseHistoriesAmount,
+        setSampleGenerationStep,
+        periods,
+        setDiseaseHistories,
+        hasHistories,
+        diseaseHistories,
+    } = useService(AppController);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [histories, setHistories] = useState<DiseaseHistory[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const worker = new Worker(new URL('./worker.ts', import.meta.url));
-        worker.postMessage({
-            periods: [...periods],
-            amount: diseaseHistoriesAmount,
-        });
-        worker.onmessage = ({ data: { answer } }) => {
-            setHistories(answer);
+        if (!hasHistories) {
+            const worker = new Worker(new URL('./worker.ts', import.meta.url));
+            worker.postMessage({
+                periods: [...periods],
+                amount: diseaseHistoriesAmount,
+            });
+            worker.onmessage = ({ data: { answer } }) => {
+                setHistories(answer);
+                setDiseaseHistories(answer);
+                setIsLoading(false);
+            };
+        } else {
             setIsLoading(false);
-        };
+        }
     }, [diseaseHistoriesAmount]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -88,7 +87,7 @@ const DiseaseHistoriesTable = observer(() => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {histories
+                                    {diseaseHistories
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((diseaseHistory) => (
                                             <Row
