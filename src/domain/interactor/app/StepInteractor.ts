@@ -26,4 +26,12 @@ export default class StepInteractor {
     public setLoadStateStep() {
         this.appRepository.setStep(Step.LoadState);
     }
+
+    public setIndKnowledgeBaseStep() {
+        this.appRepository.setStep(Step.IndKnowledgeBase);
+    }
+
+    public setIndKnowledgeBaseGenerationStep() {
+        this.appRepository.setStep(Step.IndKnowledgeBaseGeneration);
+    }
 }

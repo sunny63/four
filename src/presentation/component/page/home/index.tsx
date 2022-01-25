@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -11,6 +11,7 @@ import DiseaseHistoriesForm from './DiseaseHistoriesForm';
 import Form from './Form';
 import Tables from './Tables';
 import DiseaseHistoriesTable from './DiseaseHistoriesTable';
+import IndKnowledgeGenerationButton from './IndKnowledgeGenerationButton';
 
 const HomePage = observer(() => {
     const {
@@ -19,8 +20,11 @@ const HomePage = observer(() => {
         setSampleGenerationStep,
         setShowTablesStep,
         setShowDiseaseHistoriesStep,
+        setIndKnowledgeBaseGenerationStep,
+        setIndKnowledgeBaseStep,
         periods,
         hasHistories,
+        hasIndAttributes,
     } = useService(AppController);
     const [value, setValue] = useState<number>(0);
     const hasPeriods = periods.length > 0;
@@ -29,10 +33,20 @@ const HomePage = observer(() => {
         setValue(newValue);
 
         if (newValue) {
-            if (hasHistories) {
-                setShowDiseaseHistoriesStep();
-            } else {
-                setSampleGenerationStep();
+            if (newValue === 1) {
+                if (hasHistories) {
+                    setShowDiseaseHistoriesStep();
+                } else {
+                    setSampleGenerationStep();
+                }
+            }
+
+            if (newValue === 2) {
+                if (hasIndAttributes) {
+                    setIndKnowledgeBaseStep();
+                } else {
+                    setIndKnowledgeBaseGenerationStep();
+                }
             }
         } else if (hasPeriods) {
             setShowTablesStep();
@@ -51,12 +65,15 @@ const HomePage = observer(() => {
             >
                 <Tab label="База знаний" />
                 <Tab label="Выборка" disabled={!hasPeriods} />
+                <Tab label="Инд. База знаний" disabled={!hasPeriods} />
             </Tabs>
             {step === Step.InputData && <Form />}
             {step === Step.SampleGeneration && <DiseaseHistoriesForm />}
             {step === Step.ShowTables && <Tables />}
+            {step === Step.IndKnowledgeBase && <Tables />}
             {step === Step.ShowDiseaseHistories && <DiseaseHistoriesTable />}
             {step === Step.LoadState && <Loader />}
+            {step === Step.IndKnowledgeBaseGeneration && <IndKnowledgeGenerationButton />}
         </Layout>
     );
 });

@@ -19,6 +19,10 @@ import DiseaseHistoryRepository from 'domain/repository/diseaseHistory/DiseaseHi
 import GenerateDiseasesUseCase from 'domain/interactor/disease/GenerateDiseasesUseCase';
 import GenerateAttributesUseCase from 'domain/interactor/attribute/GenerateAttributesUseCase';
 import GeneratePeriodsUseCase from 'domain/interactor/period/GeneratePeriodsUseCase';
+import GenerateIndAttributesUseCase from 'domain/interactor/attribute/GenerateIndAttributesUseCase';
+import IndAttributeRepository from 'domain/repository/attribute/IndAttributeRepository';
+import GenerateIndPeriodsUseCase from 'domain/interactor/period/GenerateIndPeriodsUseCase';
+import IndPeriodRepository from 'domain/repository/period/IndPeriodRepository';
 import StepInteractor from 'domain/interactor/app/StepInteractor';
 
 @injectable()
@@ -49,6 +53,18 @@ export default class AppController {
 
     @inject(DiseaseHistoryRepository)
     private readonly diseaseHistoryRepository!: DiseaseHistoryRepository;
+
+    @inject(GenerateIndAttributesUseCase)
+    private readonly generateIndAttributesUseCase!: GenerateIndAttributesUseCase;
+
+    @inject(IndAttributeRepository)
+    private readonly indAttributeRepository!: IndAttributeRepository;
+
+    @inject(GenerateIndPeriodsUseCase)
+    private readonly generateIndPeriodsUseCase!: GenerateIndPeriodsUseCase;
+
+    @inject(IndPeriodRepository)
+    private readonly indPeriodRepository!: IndPeriodRepository;
 
     public handleFormSubmit: SubmitHandlerT<FormData> = (formData) => {
         const { diseasesAmount, attributesAmount, periodsAmount } = formData;
@@ -85,8 +101,23 @@ export default class AppController {
         this.stepInteractor.setShowDiseaseHistoriesStep();
     };
 
+    public setIndKnowledgeBaseStep = () => {
+        this.stepInteractor.setIndKnowledgeBaseStep();
+    };
+
+    public setIndKnowledgeBaseGenerationStep = () => {
+        this.stepInteractor.setIndKnowledgeBaseGenerationStep();
+    };
+
     public setLoadState = (): void => {
         this.stepInteractor.setLoadStateStep();
+    };
+
+    public handleIndKnowledgeGenerationButtonClick = () => {
+        this.stepInteractor.setLoadStateStep();
+        this.generateIndAttributesUseCase.execute();
+        this.generateIndPeriodsUseCase.execute();
+        this.stepInteractor.setIndKnowledgeBaseStep();
     };
 
     public getAttributesForDownloading = async (
@@ -163,12 +194,20 @@ export default class AppController {
         return this.periodRepository.getPeriods();
     }
 
+    public get indPeriods(): Period[] {
+        return this.indPeriodRepository.getPeriods();
+    }
+
     public get diseases(): Disease[] {
         return this.diseaseRepository.getDiseases();
     }
 
     public get attributes(): Attribute[] {
         return this.attributeRepository.getAttributes();
+    }
+
+    public get indAttributes(): Attribute[] {
+        return this.indAttributeRepository.getAttributes();
     }
 
     public get diseaseHistories(): DiseaseHistory[] {
@@ -181,6 +220,10 @@ export default class AppController {
 
     public get hasHistories(): boolean {
         return this.diseaseHistoryRepository.getDiseasesHistories().length > 0;
+    }
+
+    public get hasIndAttributes(): boolean {
+        return this.indAttributeRepository.getAttributes().length > 0;
     }
 
     public get user() {

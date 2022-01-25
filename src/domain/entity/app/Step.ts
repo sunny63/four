@@ -4,6 +4,8 @@ enum Step {
     ShowTables,
     ShowDiseaseHistories,
     LoadState,
+    IndKnowledgeBase,
+    IndKnowledgeBaseGeneration,
 }
 
 export default Step;

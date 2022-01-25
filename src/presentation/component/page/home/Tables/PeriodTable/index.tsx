@@ -8,13 +8,21 @@ import TableHead from '@material-ui/core/TableHead';
 import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
+import Step from 'domain/entity/app/Step';
 import { useService } from 'presentation/context/Container';
 import AppController from 'presentation/controller/app/AppController';
 import Row from './Row';
 
 interface Column {
-    id: 'disease' | 'attribute' | 'amount' |  'numberOfPeriod' | 'values' | 'lowerBound' | 'upperBound',
-    label: string,
+    id:
+        | 'disease'
+        | 'attribute'
+        | 'amount'
+        | 'numberOfPeriod'
+        | 'values'
+        | 'lowerBound'
+        | 'upperBound';
+    label: string;
 }
 
 const COLUMNS: Column[] = [
@@ -25,12 +33,13 @@ const COLUMNS: Column[] = [
     { id: 'values', label: 'Значения' },
     { id: 'lowerBound', label: 'НГ' },
     { id: 'upperBound', label: 'ВГ' },
-]
+];
 
 const PeriodTable = observer(() => {
-    const { periods } = useService(AppController);
+    const { periods, indPeriods, step } = useService(AppController);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const periodsForTable = step === Step.IndKnowledgeBase ? indPeriods : periods;
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -44,27 +53,27 @@ const PeriodTable = observer(() => {
     return (
         <Paper>
             <TableContainer component={Paper}>
-                <Table stickyHeader >
+                <Table stickyHeader>
                     <TableHead>
                         <TableRow>
                             {COLUMNS.map(({ id, label }) => (
-                                <TableCell key={id} >{label}</TableCell>
+                                <TableCell key={id}>{label}</TableCell>
                             ))}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {periods
+                        {periodsForTable
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((period) => (
-                            <Row key={period.id} period={period} />
-                        ))}
+                                <Row key={period.id} period={period} />
+                            ))}
                     </TableBody>
                 </Table>
             </TableContainer>
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={periods.length}
+                count={periodsForTable.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
