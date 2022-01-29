@@ -126,6 +126,18 @@ const getAlternativesFor5Periods = (momentsOfObservation: MomentOfObservation[])
                     const value4 = getValuesForMomentsInPeriod(moments4);
                     const value5 = getValuesForMomentsInPeriod(moments5);
                     const values = [value1, value2, value3, value4, value5];
+                    const firstBound = Math.floor(
+                        (moments1[moments1.length - 1].duration + moments2[0].duration) / 2,
+                    );
+                    const secondBound = Math.floor(
+                        (moments2[moments2.length - 1].duration + moments3[0].duration) / 2,
+                    );
+                    const thirdBound = Math.floor(
+                        (moments3[moments3.length - 1].duration + moments4[0].duration) / 2,
+                    );
+                    const fourthBound = Math.floor(
+                        (moments4[moments4.length - 1].duration + moments5[0].duration) / 2,
+                    );
 
                     if (checkFullValues(values)) {
                         const bound1: Bound = {
@@ -133,52 +145,20 @@ const getAlternativesFor5Periods = (momentsOfObservation: MomentOfObservation[])
                             upperBound: moments1[moments1.length - 1].duration,
                         };
                         const bound2: Bound = {
-                            lowerBound:
-                                moments2[0].duration -
-                                Math.round(
-                                    moments2[0].duration - moments1[moments1.length - 1].duration,
-                                ),
-                            upperBound:
-                                moments2[moments2.length - 1].duration -
-                                Math.round(
-                                    moments2[0].duration - moments1[moments1.length - 1].duration,
-                                ),
+                            lowerBound: moments2[0].duration - firstBound,
+                            upperBound: moments2[moments2.length - 1].duration - firstBound,
                         };
                         const bound3: Bound = {
-                            lowerBound:
-                                moments3[0].duration -
-                                Math.round(
-                                    moments3[0].duration - moments2[moments2.length - 1].duration,
-                                ),
-                            upperBound:
-                                moments3[moments3.length - 1].duration -
-                                Math.round(
-                                    moments3[0].duration - moments2[moments2.length - 1].duration,
-                                ),
+                            lowerBound: moments3[0].duration - secondBound,
+                            upperBound: moments3[moments3.length - 1].duration - secondBound,
                         };
                         const bound4: Bound = {
-                            lowerBound:
-                                moments4[0].duration -
-                                Math.round(
-                                    moments4[0].duration - moments3[moments3.length - 1].duration,
-                                ),
-                            upperBound:
-                                moments4[moments4.length - 1].duration -
-                                Math.round(
-                                    moments4[0].duration - moments3[moments3.length - 1].duration,
-                                ),
+                            lowerBound: moments4[0].duration - thirdBound,
+                            upperBound: moments4[moments4.length - 1].duration - thirdBound,
                         };
                         const bound5: Bound = {
-                            lowerBound:
-                                moments5[0].duration -
-                                Math.round(
-                                    moments5[0].duration - moments4[moments4.length - 1].duration,
-                                ),
-                            upperBound:
-                                moments5[moments5.length - 1].duration -
-                                Math.round(
-                                    moments5[0].duration - moments4[moments4.length - 1].duration,
-                                ),
+                            lowerBound: moments5[0].duration - fourthBound,
+                            upperBound: moments5[moments5.length - 1].duration - fourthBound,
                         };
                         const bounds: Bound[] = [bound1, bound2, bound3, bound4, bound5];
                         const alternative = new Alternative(5, values, bounds);
@@ -208,6 +188,15 @@ const getAlternativesFor4Periods = (momentsOfObservation: MomentOfObservation[])
                 const value3 = getValuesForMomentsInPeriod(moments3);
                 const value4 = getValuesForMomentsInPeriod(moments4);
                 const values = [value1, value2, value3, value4];
+                const firstBound = Math.floor(
+                    (moments1[moments1.length - 1].duration + moments2[0].duration) / 2,
+                );
+                const secondBound = Math.floor(
+                    (moments2[moments2.length - 1].duration + moments3[0].duration) / 2,
+                );
+                const thirdBound = Math.floor(
+                    (moments3[moments3.length - 1].duration + moments4[0].duration) / 2,
+                );
 
                 if (checkFullValues(values)) {
                     const bound1: Bound = {
@@ -215,40 +204,16 @@ const getAlternativesFor4Periods = (momentsOfObservation: MomentOfObservation[])
                         upperBound: moments1[moments1.length - 1].duration,
                     };
                     const bound2: Bound = {
-                        lowerBound:
-                            moments2[0].duration -
-                            Math.round(
-                                moments2[0].duration - moments1[moments1.length - 1].duration,
-                            ),
-                        upperBound:
-                            moments2[moments2.length - 1].duration -
-                            Math.round(
-                                moments2[0].duration - moments1[moments1.length - 1].duration,
-                            ),
+                        lowerBound: moments2[0].duration - firstBound,
+                        upperBound: moments2[moments2.length - 1].duration - firstBound,
                     };
                     const bound3: Bound = {
-                        lowerBound:
-                            moments3[0].duration -
-                            Math.round(
-                                moments3[0].duration - moments2[moments2.length - 1].duration,
-                            ),
-                        upperBound:
-                            moments3[moments3.length - 1].duration -
-                            Math.round(
-                                moments3[0].duration - moments2[moments2.length - 1].duration,
-                            ),
+                        lowerBound: moments3[0].duration - secondBound,
+                        upperBound: moments3[moments3.length - 1].duration - secondBound,
                     };
                     const bound4: Bound = {
-                        lowerBound:
-                            moments4[0].duration -
-                            Math.round(
-                                moments4[0].duration - moments3[moments3.length - 1].duration,
-                            ),
-                        upperBound:
-                            moments4[moments4.length - 1].duration -
-                            Math.round(
-                                moments4[0].duration - moments3[moments3.length - 1].duration,
-                            ),
+                        lowerBound: moments4[0].duration - thirdBound,
+                        upperBound: moments4[moments4.length - 1].duration - thirdBound,
                     };
                     const bounds: Bound[] = [bound1, bound2, bound3, bound4];
                     const alternative = new Alternative(4, values, bounds);
@@ -274,6 +239,12 @@ const getAlternativesFor3Periods = (momentsOfObservation: MomentOfObservation[])
             const value2 = getValuesForMomentsInPeriod(moments2);
             const value3 = getValuesForMomentsInPeriod(moments3);
             const values = [value1, value2, value3];
+            const firstBound = Math.floor(
+                (moments1[moments1.length - 1].duration + moments2[0].duration) / 2,
+            );
+            const secondBound = Math.floor(
+                (moments2[moments2.length - 1].duration + moments3[0].duration) / 2,
+            );
 
             if (checkFullValues(values)) {
                 const bound1: Bound = {
@@ -281,20 +252,12 @@ const getAlternativesFor3Periods = (momentsOfObservation: MomentOfObservation[])
                     upperBound: moments1[moments1.length - 1].duration,
                 };
                 const bound2: Bound = {
-                    lowerBound:
-                        moments2[0].duration -
-                        Math.round(moments2[0].duration - moments1[moments1.length - 1].duration),
-                    upperBound:
-                        moments2[moments2.length - 1].duration -
-                        Math.round(moments2[0].duration - moments1[moments1.length - 1].duration),
+                    lowerBound: moments2[0].duration - firstBound,
+                    upperBound: moments2[moments2.length - 1].duration - firstBound,
                 };
                 const bound3: Bound = {
-                    lowerBound:
-                        moments3[0].duration -
-                        Math.round(moments3[0].duration - moments2[moments2.length - 1].duration),
-                    upperBound:
-                        moments3[moments3.length - 1].duration -
-                        Math.round(moments3[0].duration - moments2[moments2.length - 1].duration),
+                    lowerBound: moments3[0].duration - secondBound,
+                    upperBound: moments3[moments3.length - 1].duration - secondBound,
                 };
                 const bounds: Bound[] = [bound1, bound2, bound3];
                 const alternative = new Alternative(3, values, bounds);
@@ -315,6 +278,9 @@ const getAlternativesFor2Periods = (momentsOfObservation: MomentOfObservation[])
         const moments2 = momentsOfObservation.slice(i, momentsOfObservation.length);
         const value1 = getValuesForMomentsInPeriod(moments1);
         const value2 = getValuesForMomentsInPeriod(moments2);
+        const firstBound = Math.floor(
+            (moments1[moments1.length - 1].duration + moments2[0].duration) / 2,
+        );
 
         if (checkValues(value1, value2)) {
             const values = [value1, value2];
@@ -323,12 +289,8 @@ const getAlternativesFor2Periods = (momentsOfObservation: MomentOfObservation[])
                 upperBound: moments1[moments1.length - 1].duration,
             };
             const bound2: Bound = {
-                lowerBound:
-                    moments2[0].duration -
-                    Math.round(moments2[0].duration - moments1[moments1.length - 1].duration),
-                upperBound:
-                    moments2[moments2.length - 1].duration -
-                    Math.round(moments2[0].duration - moments1[moments1.length - 1].duration),
+                lowerBound: moments2[0].duration - firstBound,
+                upperBound: moments2[moments2.length - 1].duration - firstBound,
             };
             const bounds = [bound1, bound2];
             const alternative = new Alternative(2, values, bounds);
@@ -467,12 +429,16 @@ scope.onmessage = ({ data: { indMoments } }) => {
                 mergedAlternatives.push(alternative5);
             }
 
-            const periods = mergedAlternatives.map(
+            const checkedAlternatives =
+                mergedAlternatives.filter((alternative) => checkFullValues(alternative.values)) ||
+                [];
+
+            const periods = checkedAlternatives.map(
                 ({ periodsAmount, bounds, values }) =>
                     new Period(v4(), disease, attribute, periodsAmount, values, bounds),
             );
 
-            indPeriods.push(...periods);
+            indPeriods.push(periods[periods.length - 1]);
         });
     });
 

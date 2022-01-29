@@ -27,12 +27,13 @@ const Tables: FC = observer(() => {
         // periods,
         // attributes,
         step,
-        handleIndKnowledgeGenerationButtonClick,
+        setIndKnowledgeBaseGenerationStep,
     } = useService(AppController);
     const [value, setValue] = useState<number>(4);
+    const buttonText = step === Step.IndKnowledgeBase ? 'Сформировать' : 'Генерация';
     // const isDisabled = value <= 1;
     const generationButtonOnClick =
-        step === Step.IndKnowledgeBase ? handleIndKnowledgeGenerationButtonClick : setInputDataStep;
+        step === Step.IndKnowledgeBase ? setIndKnowledgeBaseGenerationStep : setInputDataStep;
 
     const handleChange = (newValue: number) => {
         setValue(newValue);
@@ -77,7 +78,7 @@ const Tables: FC = observer(() => {
                 </Tabs>
                 <ButtonsContainer>
                     <Button type="button" color="primary" onClick={generationButtonOnClick}>
-                        Генерация
+                        {buttonText}
                     </Button>
                     {/* <Button */}
                     {/*    type="button" */}
