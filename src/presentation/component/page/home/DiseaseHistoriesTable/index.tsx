@@ -39,7 +39,7 @@ const DiseaseHistoriesTable = observer(() => {
     } = useService(AppController);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [histories, setHistories] = useState<DiseaseHistory[]>([]);
+    const [histories, setHistories] = useState<DiseaseHistory[]>(diseaseHistories);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
