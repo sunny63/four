@@ -310,7 +310,7 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
         if (i === 1) {
             const values = [getValuesForMomentsInPeriod(momentsOfObservation)];
             const lowerBound = momentsOfObservation[0].duration;
-            const upperBound = momentsOfObservation[momentsOfObservation.length - 1].duration + 1;
+            const upperBound = momentsOfObservation[momentsOfObservation.length - 1].duration;
             const bound: Bound = {
                 lowerBound,
                 upperBound,
@@ -323,25 +323,41 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
         if (i === 2) {
             const alternatives2 = getAlternativesFor2Periods(momentsOfObservation);
 
-            alternatives2.forEach((alternative) => alternatives.push(alternative));
+            if (alternatives2.length > 0) {
+                const mergedAlternatives = mergeAlternatives(2, alternatives2);
+
+                alternatives.push(mergedAlternatives);
+            }
         }
 
         if (i === 3) {
             const alternatives3 = getAlternativesFor3Periods(momentsOfObservation);
 
-            alternatives3.forEach((alternative) => alternatives.push(alternative));
+            if (alternatives3.length > 0) {
+                const mergedAlternatives = mergeAlternatives(3, alternatives3);
+
+                alternatives.push(mergedAlternatives);
+            }
         }
 
         if (i === 4) {
             const alternatives4 = getAlternativesFor4Periods(momentsOfObservation);
 
-            alternatives4.forEach((alternative) => alternatives.push(alternative));
+            if (alternatives4.length > 0) {
+                const mergedAlternatives = mergeAlternatives(4, alternatives4);
+
+                alternatives.push(mergedAlternatives);
+            }
         }
 
         if (i === 5) {
             const alternatives5 = getAlternativesFor5Periods(momentsOfObservation);
 
-            alternatives5.forEach((alternative) => alternatives.push(alternative));
+            if (alternatives5.length > 0) {
+                const mergedAlternatives = mergeAlternatives(5, alternatives5);
+
+                alternatives.push(mergedAlternatives);
+            }
         }
     }
 
