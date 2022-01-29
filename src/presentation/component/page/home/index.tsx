@@ -24,7 +24,8 @@ const HomePage = observer(() => {
         setIndKnowledgeBaseStep,
         periods,
         hasHistories,
-        hasIndAttributes,
+        hasIndPeriods,
+        indPeriods,
     } = useService(AppController);
     const [value, setValue] = useState<number>(0);
     const hasPeriods = periods.length > 0;
@@ -42,7 +43,10 @@ const HomePage = observer(() => {
             }
 
             if (newValue === 2) {
-                if (hasIndAttributes) {
+                console.log({ hasIndPeriods });
+                console.log({ indPeriods });
+
+                if (hasIndPeriods) {
                     setIndKnowledgeBaseStep();
                 } else {
                     setIndKnowledgeBaseGenerationStep();

@@ -14,17 +14,11 @@ scope.onmessage = ({ data: { periods, amount } }) => {
         periods.forEach((period: Period) => {
             const { values, bounds } = period;
             let lastBoundDuration = 0;
+            const diseaseHistory = new DiseaseHistory(v4(), i + 1, period);
 
             bounds?.forEach(({ upperBound, lowerBound }, index) => {
                 const { from, to } = values[index];
                 const periodDuration = randomNumber(lowerBound, upperBound);
-                const diseaseHistory = new DiseaseHistory(
-                    v4(),
-                    i + 1,
-                    period,
-                    index,
-                    periodDuration,
-                );
                 let momentsOfObservationDurationCounter = periodDuration;
                 let commonMomentsDuration = 0;
 
@@ -44,9 +38,10 @@ scope.onmessage = ({ data: { periods, amount } }) => {
                     commonMomentsDuration += momentOfObservationDuration;
                 }
 
-                diseaseHistories.push(diseaseHistory);
                 lastBoundDuration += periodDuration;
             });
+
+            diseaseHistories.push(diseaseHistory);
         });
     }
 

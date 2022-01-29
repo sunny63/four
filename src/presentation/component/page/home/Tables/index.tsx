@@ -29,7 +29,7 @@ const Tables: FC = observer(() => {
         step,
         handleIndKnowledgeGenerationButtonClick,
     } = useService(AppController);
-    const [value, setValue] = useState<number>(0);
+    const [value, setValue] = useState<number>(4);
     // const isDisabled = value <= 1;
     const generationButtonOnClick =
         step === Step.IndKnowledgeBase ? handleIndKnowledgeGenerationButtonClick : setInputDataStep;

@@ -186,6 +186,10 @@ export default class AppController {
         this.diseaseHistoryRepository.setDiseaseHistories(diseaseHistories);
     };
 
+    public setIndPeriods = (periods: Period[]) => {
+        this.indPeriodRepository.setPeriods(periods);
+    };
+
     public get step(): Step {
         return this.appRepository.getStep();
     }
@@ -196,6 +200,10 @@ export default class AppController {
 
     public get indPeriods(): Period[] {
         return this.indPeriodRepository.getPeriods();
+    }
+
+    public get hasIndPeriods(): boolean {
+        return this.indPeriodRepository.getPeriods().length > 0;
     }
 
     public get diseases(): Disease[] {
