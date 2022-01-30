@@ -12,7 +12,7 @@ import DiseasesTable from './DiseasesTable';
 import AttributesTable from './AttributesTable';
 import ValuesTable from './ValuesTable';
 import CHPDTable from './CHPDTable';
-import { NavBox, ButtonsContainer } from './styles';
+import { NavBox, TabsWrapper, ButtonsContainer } from './styles';
 
 const Tables: FC = observer(() => {
     const { setInputDataStep, step, setIndKnowledgeBaseGenerationStep } = useService(AppController);
@@ -28,18 +28,24 @@ const Tables: FC = observer(() => {
     return (
         <Box>
             <NavBox sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs
-                    value={value}
-                    onChange={(_, selectedValue) => handleChange(selectedValue)}
-                    textColor="primary"
-                    indicatorColor="primary"
-                >
-                    <Tab label="Классы" />
-                    <Tab label="Признаки" />
-                    <Tab label="Возможные/Нормальные значения" />
-                    <Tab label="ЧПД" />
-                    <Tab label="ЗДП" />
-                </Tabs>
+                <TabsWrapper>
+                    {step !== Step.IndKnowledgeBase && (
+                        <>
+                            <Tabs
+                                value={value}
+                                onChange={(_, selectedValue) => handleChange(selectedValue)}
+                                textColor="primary"
+                                indicatorColor="primary"
+                            >
+                                <Tab label="Классы" />
+                                <Tab label="Признаки" />
+                                <Tab label="Возможные/Нормальные значения" />
+                                <Tab label="ЧПД" />
+                                <Tab label="ЗДП" />
+                            </Tabs>
+                        </>
+                    )}
+                </TabsWrapper>
                 <ButtonsContainer>
                     <Button type="button" color="primary" onClick={generationButtonOnClick}>
                         {buttonText}

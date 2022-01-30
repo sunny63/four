@@ -41,12 +41,6 @@ const checkFullValues = (values: Value[]): boolean => {
     return true;
 };
 
-const checkBounds = (bounds: Bound[]): boolean => {
-    const largeBounds = bounds.find(({ upperBound }) => upperBound > 12);
-
-    return !largeBounds;
-};
-
 const mergeAlternatives = (periodsAmount: number, alternatives: Alternative[]): Alternative => {
     const values: Value[] = [];
     const bounds: Bound[] = [];
@@ -171,12 +165,9 @@ const getAlternativesFor5Periods = (momentsOfObservation: MomentOfObservation[])
                             upperBound: moments5[moments5.length - 1].duration - fourthBound,
                         };
                         const bounds: Bound[] = [bound1, bound2, bound3, bound4, bound5];
+                        const alternative = new Alternative(5, values, bounds);
 
-                        if (checkBounds(bounds)) {
-                            const alternative = new Alternative(5, values, bounds);
-
-                            alternatives.push(alternative);
-                        }
+                        alternatives.push(alternative);
                     }
                 }
             }
@@ -229,12 +220,9 @@ const getAlternativesFor4Periods = (momentsOfObservation: MomentOfObservation[])
                         upperBound: moments4[moments4.length - 1].duration - thirdBound,
                     };
                     const bounds: Bound[] = [bound1, bound2, bound3, bound4];
+                    const alternative = new Alternative(5, values, bounds);
 
-                    if (checkBounds(bounds)) {
-                        const alternative = new Alternative(5, values, bounds);
-
-                        alternatives.push(alternative);
-                    }
+                    alternatives.push(alternative);
                 }
             }
         }
@@ -276,12 +264,9 @@ const getAlternativesFor3Periods = (momentsOfObservation: MomentOfObservation[])
                     upperBound: moments3[moments3.length - 1].duration - secondBound,
                 };
                 const bounds: Bound[] = [bound1, bound2, bound3];
+                const alternative = new Alternative(5, values, bounds);
 
-                if (checkBounds(bounds)) {
-                    const alternative = new Alternative(5, values, bounds);
-
-                    alternatives.push(alternative);
-                }
+                alternatives.push(alternative);
             }
         }
     }
@@ -312,12 +297,9 @@ const getAlternativesFor2Periods = (momentsOfObservation: MomentOfObservation[])
                 upperBound: moments2[moments2.length - 1].duration - firstBound,
             };
             const bounds = [bound1, bound2];
+            const alternative = new Alternative(5, values, bounds);
 
-            if (checkBounds(bounds)) {
-                const alternative = new Alternative(5, values, bounds);
-
-                alternatives.push(alternative);
-            }
+            alternatives.push(alternative);
         }
     }
 

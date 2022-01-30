@@ -72,6 +72,8 @@ export default class AppController {
         this.generateDiseasesUseCase.execute(Number(diseasesAmount));
         this.generateAttributesUseCase.execute(Number(attributesAmount));
         this.generatePeriodsUseCase.execute(Number(periodsAmount));
+        this.diseaseHistoryRepository.setDiseaseHistories([]);
+        this.indPeriodRepository.setPeriods([]);
         this.stepInteractor.setShowTablesStep();
     };
 
@@ -81,6 +83,7 @@ export default class AppController {
         const { diseaseHistoriesAmount } = formData;
 
         this.diseaseHistoryRepository.setAmount(Number(diseaseHistoriesAmount));
+        this.indPeriodRepository.setPeriods([]);
         this.stepInteractor.setShowDiseaseHistoriesStep();
     };
 

@@ -45,7 +45,11 @@ scope.onmessage = ({ data: { periods, amount } }) => {
         });
     }
 
-    scope.postMessage({
-        answer: diseaseHistories,
-    });
+    const CHUNK_SIZE = 2_000_000;
+
+    for (let i = 0, j = CHUNK_SIZE; i < diseaseHistories.length; i += CHUNK_SIZE, j += CHUNK_SIZE) {
+        scope.postMessage({
+            answer: diseaseHistories.slice(i, j),
+        });
+    }
 };

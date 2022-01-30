@@ -39,21 +39,32 @@ const DiseaseHistoriesTable = observer(() => {
     } = useService(AppController);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [histories, setHistories] = useState<DiseaseHistory[]>(diseaseHistories);
     const [isLoading, setIsLoading] = useState(true);
+    const chunksAmount = Math.ceil(diseaseHistoriesAmount / 1000);
+    const histories: DiseaseHistory[] = [];
 
     useEffect(() => {
         if (!hasHistories) {
             const worker = new Worker(new URL('./worker.ts', import.meta.url));
-            worker.postMessage({
-                periods: [...periods],
-                amount: diseaseHistoriesAmount,
-            });
-            worker.onmessage = ({ data: { answer } }) => {
-                setHistories(answer);
-                setDiseaseHistories(answer);
-                setIsLoading(false);
-            };
+
+            for (let i = 0; i < chunksAmount; i++) {
+                const historiesAmount =
+                    i === chunksAmount - 1 ? diseaseHistoriesAmount - i * 1000 : 1000;
+
+                worker.postMessage({
+                    periods: [...periods],
+                    amount: historiesAmount,
+                });
+
+                worker.onmessage = ({ data: { answer } }) => {
+                    histories.push(...answer);
+
+                    if (histories.length === periods.length * diseaseHistoriesAmount) {
+                        setDiseaseHistories(histories);
+                        setIsLoading(false);
+                    }
+                };
+            }
         } else {
             setIsLoading(false);
         }
@@ -101,7 +112,7 @@ const DiseaseHistoriesTable = observer(() => {
                         <TablePagination
                             rowsPerPageOptions={[10, 25, 100]}
                             component="div"
-                            count={histories.length}
+                            count={diseaseHistories.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}

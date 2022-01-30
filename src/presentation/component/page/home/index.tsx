@@ -65,7 +65,7 @@ const HomePage = observer(() => {
             >
                 <Tab label="База знаний" />
                 <Tab label="Выборка" disabled={!hasPeriods} />
-                <Tab label="Инд. База знаний" disabled={!hasPeriods} />
+                <Tab label="Инд. База знаний" disabled={!hasHistories} />
             </Tabs>
             {step === Step.InputData && <Form />}
             {step === Step.SampleGeneration && <DiseaseHistoriesForm />}
