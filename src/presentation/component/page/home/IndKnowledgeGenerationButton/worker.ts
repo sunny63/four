@@ -8,6 +8,45 @@ import Period from 'domain/entity/period/Period';
 import Bound from 'domain/entity/period/Bound';
 import IndMoment from 'domain/entity/diseaseHistory/IndMoment';
 
+const checkValues = (value1: Value, value2: Value): boolean => {
+    const { from: from1, to: to1 } = value1;
+    const { from: from2, to: to2 } = value2;
+
+    if (from1 >= from2 && from1 <= to2) {
+        return false;
+    }
+
+    if (to1 >= from2 && to1 <= to2) {
+        return false;
+    }
+
+    if (from2 >= from1 && from2 <= to1) {
+        return false;
+    }
+
+    if (to2 >= from1 && to2 <= to1) {
+        return false;
+    }
+
+    return true;
+};
+
+const checkFullValues = (values: Value[]): boolean => {
+    for (let i = 0; i < values.length - 1; i++) {
+        if (!checkValues(values[i], values[i + 1])) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+const checkBounds = (bounds: Bound[]): boolean => {
+    const largeBounds = bounds.find(({ upperBound }) => upperBound > 12);
+
+    return !largeBounds;
+};
+
 const mergeAlternatives = (periodsAmount: number, alternatives: Alternative[]): Alternative => {
     const values: Value[] = [];
     const bounds: Bound[] = [];
@@ -52,7 +91,11 @@ const mergeAlternatives = (periodsAmount: number, alternatives: Alternative[]): 
         bounds.push(bound);
     }
 
-    return new Alternative(periodsAmount, values, bounds);
+    if (checkFullValues(values)) {
+        return new Alternative(periodsAmount, values, bounds);
+    }
+
+    return Alternative.CreateEmpty();
 };
 
 const getValuesForMomentsInPeriod = (moments: MomentOfObservation[]): Value => {
@@ -73,39 +116,6 @@ const getValuesForMomentsInPeriod = (moments: MomentOfObservation[]): Value => {
         from: minValue,
         to: maxValue,
     };
-};
-
-const checkValues = (value1: Value, value2: Value): boolean => {
-    const { from: from1, to: to1 } = value1;
-    const { from: from2, to: to2 } = value2;
-
-    if (from1 >= from2 && from1 <= to2) {
-        return false;
-    }
-
-    if (to1 >= from2 && to1 <= to2) {
-        return false;
-    }
-
-    if (from2 >= from1 && from2 <= to1) {
-        return false;
-    }
-
-    if (to2 >= from1 && to2 <= to1) {
-        return false;
-    }
-
-    return true;
-};
-
-const checkFullValues = (values: Value[]): boolean => {
-    for (let i = 0; i < values.length - 1; i++) {
-        if (!checkValues(values[i], values[i + 1])) {
-            return false;
-        }
-    }
-
-    return true;
 };
 
 const getAlternativesFor5Periods = (momentsOfObservation: MomentOfObservation[]): Alternative[] => {
@@ -161,9 +171,12 @@ const getAlternativesFor5Periods = (momentsOfObservation: MomentOfObservation[])
                             upperBound: moments5[moments5.length - 1].duration - fourthBound,
                         };
                         const bounds: Bound[] = [bound1, bound2, bound3, bound4, bound5];
-                        const alternative = new Alternative(5, values, bounds);
 
-                        alternatives.push(alternative);
+                        if (checkBounds(bounds)) {
+                            const alternative = new Alternative(5, values, bounds);
+
+                            alternatives.push(alternative);
+                        }
                     }
                 }
             }
@@ -216,9 +229,12 @@ const getAlternativesFor4Periods = (momentsOfObservation: MomentOfObservation[])
                         upperBound: moments4[moments4.length - 1].duration - thirdBound,
                     };
                     const bounds: Bound[] = [bound1, bound2, bound3, bound4];
-                    const alternative = new Alternative(4, values, bounds);
 
-                    alternatives.push(alternative);
+                    if (checkBounds(bounds)) {
+                        const alternative = new Alternative(5, values, bounds);
+
+                        alternatives.push(alternative);
+                    }
                 }
             }
         }
@@ -260,9 +276,12 @@ const getAlternativesFor3Periods = (momentsOfObservation: MomentOfObservation[])
                     upperBound: moments3[moments3.length - 1].duration - secondBound,
                 };
                 const bounds: Bound[] = [bound1, bound2, bound3];
-                const alternative = new Alternative(3, values, bounds);
 
-                alternatives.push(alternative);
+                if (checkBounds(bounds)) {
+                    const alternative = new Alternative(5, values, bounds);
+
+                    alternatives.push(alternative);
+                }
             }
         }
     }
@@ -293,9 +312,12 @@ const getAlternativesFor2Periods = (momentsOfObservation: MomentOfObservation[])
                 upperBound: moments2[moments2.length - 1].duration - firstBound,
             };
             const bounds = [bound1, bound2];
-            const alternative = new Alternative(2, values, bounds);
 
-            alternatives.push(alternative);
+            if (checkBounds(bounds)) {
+                const alternative = new Alternative(5, values, bounds);
+
+                alternatives.push(alternative);
+            }
         }
     }
 
@@ -324,9 +346,11 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
             const alternatives2 = getAlternativesFor2Periods(momentsOfObservation);
 
             if (alternatives2.length > 0) {
-                const mergedAlternatives = mergeAlternatives(2, alternatives2);
+                const mergedAlternative = mergeAlternatives(2, alternatives2);
 
-                alternatives.push(mergedAlternatives);
+                if (!mergedAlternative.isEmpty()) {
+                    alternatives.push(mergedAlternative);
+                }
             }
         }
 
@@ -336,7 +360,9 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
             if (alternatives3.length > 0) {
                 const mergedAlternatives = mergeAlternatives(3, alternatives3);
 
-                alternatives.push(mergedAlternatives);
+                if (!mergedAlternatives.isEmpty()) {
+                    alternatives.push(mergedAlternatives);
+                }
             }
         }
 
@@ -346,7 +372,9 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
             if (alternatives4.length > 0) {
                 const mergedAlternatives = mergeAlternatives(4, alternatives4);
 
-                alternatives.push(mergedAlternatives);
+                if (!mergedAlternatives.isEmpty()) {
+                    alternatives.push(mergedAlternatives);
+                }
             }
         }
 
@@ -356,7 +384,9 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
             if (alternatives5.length > 0) {
                 const mergedAlternatives = mergeAlternatives(5, alternatives5);
 
-                alternatives.push(mergedAlternatives);
+                if (!mergedAlternatives.isEmpty()) {
+                    alternatives.push(mergedAlternatives);
+                }
             }
         }
     }
@@ -418,38 +448,44 @@ scope.onmessage = ({ data: { indMoments } }) => {
             if (alternatives1.length > 0) {
                 const alternative1 = mergeAlternatives(1, alternatives1);
 
-                mergedAlternatives.push(alternative1);
+                if (!alternative1.isEmpty()) {
+                    mergedAlternatives.push(alternative1);
+                }
             }
 
             if (alternatives2.length > 0) {
                 const alternative2 = mergeAlternatives(2, alternatives2);
 
-                mergedAlternatives.push(alternative2);
+                if (!alternative2.isEmpty()) {
+                    mergedAlternatives.push(alternative2);
+                }
             }
 
             if (alternatives3.length > 0) {
                 const alternative3 = mergeAlternatives(3, alternatives3);
 
-                mergedAlternatives.push(alternative3);
+                if (!alternative3.isEmpty()) {
+                    mergedAlternatives.push(alternative3);
+                }
             }
 
             if (alternatives4.length > 0) {
                 const alternative4 = mergeAlternatives(4, alternatives4);
 
-                mergedAlternatives.push(alternative4);
+                if (!alternative4.isEmpty()) {
+                    mergedAlternatives.push(alternative4);
+                }
             }
 
             if (alternatives5.length > 0) {
                 const alternative5 = mergeAlternatives(5, alternatives5);
 
-                mergedAlternatives.push(alternative5);
+                if (!alternative5.isEmpty()) {
+                    mergedAlternatives.push(alternative5);
+                }
             }
 
-            const checkedAlternatives =
-                mergedAlternatives.filter((alternative) => checkFullValues(alternative.values)) ||
-                [];
-
-            const periods = checkedAlternatives.map(
+            const periods = mergedAlternatives.map(
                 ({ periodsAmount, bounds, values }) =>
                     new Period(v4(), disease, attribute, periodsAmount, values, bounds),
             );

@@ -29,7 +29,6 @@ const IndKnowledgeGenerationButton: FC = () => {
                 indMoments: [...indMoments],
             });
             worker.onmessage = ({ data: { answer } }) => {
-                console.log({ answer });
                 setIndPeriods(answer);
                 setIsLoading(false);
                 setIndKnowledgeBaseStep();
