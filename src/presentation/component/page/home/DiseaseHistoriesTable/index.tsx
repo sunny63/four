@@ -13,7 +13,7 @@ import { useService } from 'presentation/context/Container';
 import AppController from 'presentation/controller/app/AppController';
 import Loader from 'presentation/component/common/block/Loader';
 import Row from './Row';
-import { Wrapper, Button } from './styles';
+import { Wrapper } from './styles';
 
 interface Column {
     id: 'numberOfHistory' | 'disease' | 'attribute' | 'momentDuration' | 'momentValue';
@@ -31,14 +31,14 @@ const COLUMNS: Column[] = [
 const DiseaseHistoriesTable = observer(() => {
     const {
         diseaseHistoriesAmount,
-        setSampleGenerationStep,
+        // setSampleGenerationStep,
         periods,
         setDiseaseHistories,
         hasHistories,
         diseaseHistories,
     } = useService(AppController);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(1000);
     const [isLoading, setIsLoading] = useState(true);
     const chunksAmount = Math.ceil(diseaseHistoriesAmount / 1000);
     const histories: DiseaseHistory[] = [];
@@ -84,9 +84,6 @@ const DiseaseHistoriesTable = observer(() => {
             {isLoading && <Loader />}
             {!isLoading && (
                 <>
-                    <Button type="button" color="primary" onClick={setSampleGenerationStep}>
-                        Генерация
-                    </Button>
                     <Paper>
                         <TableContainer component={Paper}>
                             <Table stickyHeader>

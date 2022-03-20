@@ -7,6 +7,7 @@ type PropsT = {
     diseaseHistory: DiseaseHistory;
 };
 
+// строки для таблицы болезней
 const Row: FC<PropsT> = (props) => {
     const { diseaseHistory } = props;
     const { index, period, momentsOfObservation } = diseaseHistory;

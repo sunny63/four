@@ -36,7 +36,7 @@ const COLUMNS: Column[] = [
 const ValuesTable = observer(() => {
     const { attributes, indAttributes, step } = useService(AppController);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(1000);
     const attributesForTable = step === Step.IndKnowledgeBase ? indAttributes : attributes;
 
     const handleChangePage = (event: unknown, newPage: number) => {

@@ -12,18 +12,23 @@ import { useService } from 'presentation/context/Container';
 import AppController from 'presentation/controller/app/AppController';
 
 interface Column {
-    id: 'disease' | 'attribute' | 'amount' |  'numberOfPeriod' | 'values' | 'lowerBound' | 'upperBound',
-    label: string,
+    id:
+        | 'disease'
+        | 'attribute'
+        | 'amount'
+        | 'numberOfPeriod'
+        | 'values'
+        | 'lowerBound'
+        | 'upperBound';
+    label: string;
 }
 
-const COLUMNS: Column[] = [
-    { id: 'attribute', label: 'Признак' },
-]
+const COLUMNS: Column[] = [{ id: 'attribute', label: 'Признак' }];
 
 const AttributesTable = observer(() => {
     const { attributes } = useService(AppController);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(1000);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -37,11 +42,11 @@ const AttributesTable = observer(() => {
     return (
         <Paper>
             <TableContainer component={Paper}>
-                <Table stickyHeader >
+                <Table stickyHeader>
                     <TableHead>
                         <TableRow>
                             {COLUMNS.map(({ id, label }) => (
-                                <TableCell key={`attributes-${id}`} >{label}</TableCell>
+                                <TableCell key={`attributes-${id}`}>{label}</TableCell>
                             ))}
                         </TableRow>
                     </TableHead>

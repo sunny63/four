@@ -8,6 +8,6 @@ const getStringInterval = (value: Value): string => {
     }
 
     return `[${from}, ${to}]`;
-}
+};
 
 export default getStringInterval;

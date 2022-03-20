@@ -33,7 +33,7 @@ const COLUMNS: Column[] = [
 const CHPDTable = observer(() => {
     const { periods, indPeriods, step } = useService(AppController);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(1000);
     const periodsForTable = step === Step.IndKnowledgeBase ? indPeriods : periods;
 
     const handleChangePage = (event: unknown, newPage: number) => {

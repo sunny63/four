@@ -12,6 +12,7 @@ import Form from './Form';
 import Tables from './Tables';
 import DiseaseHistoriesTable from './DiseaseHistoriesTable';
 import IndKnowledgeGenerationButton from './IndKnowledgeGenerationButton';
+import Statistic from './Statistic';
 
 const HomePage = observer(() => {
     const {
@@ -22,6 +23,7 @@ const HomePage = observer(() => {
         setShowDiseaseHistoriesStep,
         setIndKnowledgeBaseGenerationStep,
         setIndKnowledgeBaseStep,
+        setStatisticStep,
         periods,
         hasHistories,
         hasIndPeriods,
@@ -48,6 +50,14 @@ const HomePage = observer(() => {
                     setIndKnowledgeBaseGenerationStep();
                 }
             }
+
+            if (newValue === 3) {
+                if (hasIndPeriods) {
+                    setStatisticStep();
+                } else {
+                    setStatisticStep();
+                }
+            }
         } else if (hasPeriods) {
             setShowTablesStep();
         } else {
@@ -60,12 +70,13 @@ const HomePage = observer(() => {
             <Tabs
                 value={value}
                 onChange={(_, selectedValue) => handleChange(selectedValue)}
-                textColor="primary"
-                indicatorColor="primary"
+                textColor="secondary"
+                indicatorColor="secondary"
             >
-                <Tab label="База знаний" />
-                <Tab label="Выборка" disabled={!hasPeriods} />
-                <Tab label="Инд. База знаний" disabled={!hasHistories} />
+                <Tab label="МБЗ" />
+                <Tab label="Истории болезни" disabled={!hasPeriods} />
+                <Tab label="ИФБЗ" disabled={!hasHistories} />
+                <Tab label="Статистика" disabled={!hasHistories} />
             </Tabs>
             {step === Step.InputData && <Form />}
             {step === Step.SampleGeneration && <DiseaseHistoriesForm />}
@@ -74,6 +85,7 @@ const HomePage = observer(() => {
             {step === Step.ShowDiseaseHistories && <DiseaseHistoriesTable />}
             {step === Step.LoadState && <Loader />}
             {step === Step.IndKnowledgeBaseGeneration && <IndKnowledgeGenerationButton />}
+            {step === Step.Statistic && <Statistic />}
         </Layout>
     );
 });

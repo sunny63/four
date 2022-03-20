@@ -112,6 +112,10 @@ export default class AppController {
         this.stepInteractor.setIndKnowledgeBaseGenerationStep();
     };
 
+    public setStatisticStep = () => {
+        this.stepInteractor.setStatisticStep();
+    };
+
     public setLoadState = (): void => {
         this.stepInteractor.setLoadStateStep();
     };

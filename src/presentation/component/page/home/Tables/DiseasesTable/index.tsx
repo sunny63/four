@@ -12,18 +12,23 @@ import { useService } from 'presentation/context/Container';
 import AppController from 'presentation/controller/app/AppController';
 
 interface Column {
-    id: 'disease' | 'attribute' | 'amount' |  'numberOfPeriod' | 'values' | 'lowerBound' | 'upperBound',
-    label: string,
+    id:
+        | 'disease'
+        | 'attribute'
+        | 'amount'
+        | 'numberOfPeriod'
+        | 'values'
+        | 'lowerBound'
+        | 'upperBound';
+    label: string;
 }
 
-const COLUMNS: Column[] = [
-    { id: 'disease', label: 'Класс' },
-]
+const COLUMNS: Column[] = [{ id: 'disease', label: 'Класс' }];
 
 const DiseasesTable = observer(() => {
     const { diseases } = useService(AppController);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(1000);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -37,11 +42,11 @@ const DiseasesTable = observer(() => {
     return (
         <Paper>
             <TableContainer component={Paper}>
-                <Table stickyHeader >
+                <Table stickyHeader>
                     <TableHead>
                         <TableRow>
                             {COLUMNS.map(({ id, label }) => (
-                                <TableCell key={`diseases-${id}`} >{label}</TableCell>
+                                <TableCell key={`diseases-${id}`}>{label}</TableCell>
                             ))}
                         </TableRow>
                     </TableHead>
@@ -49,10 +54,10 @@ const DiseasesTable = observer(() => {
                         {diseases
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map(({ id, name }) => (
-                            <TableRow key={id}>
-                                <TableCell>{name}</TableCell>
-                            </TableRow>
-                        ))}
+                                <TableRow key={id}>
+                                    <TableCell>{name}</TableCell>
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             </TableContainer>

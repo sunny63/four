@@ -4,7 +4,7 @@ import MomentOfObservation from 'domain/entity/diseaseHistory/MomentOfObservatio
 import { useService } from 'presentation/context/Container';
 import AppController from 'presentation/controller/app/AppController';
 
-const IndKnowledgeGenerationButton: () => null = () => {
+const Statistic: () => null = () => {
     const { setIndPeriods, diseaseHistories, setIndKnowledgeBaseStep } = useService(AppController);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const indMoments = diseaseHistories.map(
@@ -36,4 +36,4 @@ const IndKnowledgeGenerationButton: () => null = () => {
     return null;
 };
 
-export default IndKnowledgeGenerationButton;
+export default Statistic;

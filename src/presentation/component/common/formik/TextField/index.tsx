@@ -4,16 +4,14 @@ import { Field, FieldProps } from 'formik';
 
 type PropsT = TextFieldProps & {
     name: string;
-}
+};
 
 const TextField: FC<PropsT> = (props) => {
     const { name, ...restProps } = props;
 
     return (
-        <Field name={name} >
-            {({ field }: FieldProps) => (
-                <BaseTextField {...restProps} { ...field } />
-            )}
+        <Field name={name}>
+            {({ field }: FieldProps) => <BaseTextField {...restProps} {...field} />}
         </Field>
     );
 };

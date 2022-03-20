@@ -14,7 +14,7 @@ export default class GenerateDiseasesUseCase {
         const diseases: Disease[] = [];
 
         for (let i = 1; i <= diseasesAmount; i++) {
-            const diseaseName = `${DISEASE_NAME}${i}`;
+            const diseaseName = `${DISEASE_NAME} №${i}`;
             const disease = new Disease(v4(), diseaseName);
 
             diseases.push(disease);

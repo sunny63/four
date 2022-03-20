@@ -32,7 +32,7 @@ export default class GenerateAttributesUseCase {
         const attributes: Attribute[] = [];
 
         for (let i = 1; i <= attributesAmount; i++) {
-            const attributeName = `${ATTRIBUTE_NAME}${i}`;
+            const attributeName = `${ATTRIBUTE_NAME} №${i}`;
             const possibleValues = this.getPossibleValues();
             const { from, to } = possibleValues;
             const normalValues = getRandomRange(from, to - 1);

@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import Box from '@material-ui/core/Box';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import Button from '@material-ui/core/Button';
 import Step from 'domain/entity/app/Step';
 import { useService } from 'presentation/context/Container';
 import AppController from 'presentation/controller/app/AppController';
@@ -12,14 +11,11 @@ import DiseasesTable from './DiseasesTable';
 import AttributesTable from './AttributesTable';
 import ValuesTable from './ValuesTable';
 import CHPDTable from './CHPDTable';
-import { NavBox, TabsWrapper, ButtonsContainer } from './styles';
+import { NavBox, TabsWrapper } from './styles';
 
 const Tables: FC = observer(() => {
-    const { setInputDataStep, step, setIndKnowledgeBaseGenerationStep } = useService(AppController);
+    const { step } = useService(AppController);
     const [value, setValue] = useState<number>(4);
-    const buttonText = step === Step.IndKnowledgeBase ? 'Сформировать' : 'Генерация';
-    const generationButtonOnClick =
-        step === Step.IndKnowledgeBase ? setIndKnowledgeBaseGenerationStep : setInputDataStep;
 
     const handleChange = (newValue: number) => {
         setValue(newValue);
@@ -39,18 +35,13 @@ const Tables: FC = observer(() => {
                             >
                                 <Tab label="Классы" />
                                 <Tab label="Признаки" />
-                                <Tab label="Возможные/Нормальные значения" />
+                                <Tab label="ВЗ/НЗ" />
                                 <Tab label="ЧПД" />
                                 <Tab label="ЗДП" />
                             </Tabs>
                         </>
                     )}
                 </TabsWrapper>
-                <ButtonsContainer>
-                    <Button type="button" color="primary" onClick={generationButtonOnClick}>
-                        {buttonText}
-                    </Button>
-                </ButtonsContainer>
             </NavBox>
             {value === 0 && <DiseasesTable />}
             {value === 1 && <AttributesTable />}

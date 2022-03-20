@@ -29,7 +29,7 @@ const COLUMNS: Column[] = [
     { id: 'disease', label: 'Класс' },
     { id: 'attribute', label: 'Признак' },
     { id: 'amount', label: 'ЧПД' },
-    { id: 'numberOfPeriod', label: 'Номер пер.' },
+    { id: 'numberOfPeriod', label: 'Номер периода' },
     { id: 'values', label: 'Значения' },
     { id: 'lowerBound', label: 'НГ' },
     { id: 'upperBound', label: 'ВГ' },
@@ -38,7 +38,7 @@ const COLUMNS: Column[] = [
 const PeriodTable = observer(() => {
     const { periods, indPeriods, step } = useService(AppController);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(1000);
     const periodsForTable = step === Step.IndKnowledgeBase ? indPeriods : periods;
 
     const handleChangePage = (event: unknown, newPage: number) => {

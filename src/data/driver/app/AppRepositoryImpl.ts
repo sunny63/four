@@ -1,5 +1,5 @@
-import {makeAutoObservable} from 'mobx';
-import {injectable} from 'inversify';
+import { makeAutoObservable } from 'mobx';
+import { injectable } from 'inversify';
 import User from 'domain/entity/app/User';
 import Step from 'domain/entity/app/Step';
 import AppRepository from 'domain/repository/app/AppRepository';
