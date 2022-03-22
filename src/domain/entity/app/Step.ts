@@ -7,6 +7,7 @@ enum Step {
     IndKnowledgeBase,
     IndKnowledgeBaseGeneration,
     Statistic,
+    ShowTablesStatistic,
 }
 
 export default Step;

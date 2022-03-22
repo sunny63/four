@@ -116,6 +116,10 @@ export default class AppController {
         this.stepInteractor.setStatisticStep();
     };
 
+    public setShowTablesStatisticStep = () => {
+        this.stepInteractor.setShowTablesStatisticStep();
+    };
+
     public setLoadState = (): void => {
         this.stepInteractor.setLoadStateStep();
     };

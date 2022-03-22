@@ -12,5 +12,3 @@ export const Wrapper = styled.div`
     background-color: ${({ theme }) => theme.colors.base};
     border-radius: 8px;
 `;
-
-// background-color: ${({ theme }) => theme.colors.base};

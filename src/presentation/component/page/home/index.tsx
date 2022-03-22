@@ -10,6 +10,7 @@ import Loader from 'presentation/component/common/block/Loader';
 import DiseaseHistoriesForm from './DiseaseHistoriesForm';
 import Form from './Form';
 import Tables from './Tables';
+import TablesStatistic from './TablesStatistic';
 import DiseaseHistoriesTable from './DiseaseHistoriesTable';
 import IndKnowledgeGenerationButton from './IndKnowledgeGenerationButton';
 import Statistic from './Statistic';
@@ -24,6 +25,7 @@ const HomePage = observer(() => {
         setIndKnowledgeBaseGenerationStep,
         setIndKnowledgeBaseStep,
         setStatisticStep,
+        setShowTablesStatisticStep,
         periods,
         hasHistories,
         hasIndPeriods,
@@ -54,8 +56,10 @@ const HomePage = observer(() => {
             if (newValue === 3) {
                 if (hasIndPeriods) {
                     setStatisticStep();
+                    setShowTablesStatisticStep();
                 } else {
                     setStatisticStep();
+                    setShowTablesStatisticStep();
                 }
             }
         } else if (hasPeriods) {
@@ -86,6 +90,7 @@ const HomePage = observer(() => {
             {step === Step.LoadState && <Loader />}
             {step === Step.IndKnowledgeBaseGeneration && <IndKnowledgeGenerationButton />}
             {step === Step.Statistic && <Statistic />}
+            {step === Step.ShowTablesStatistic && <TablesStatistic />}
         </Layout>
     );
 });
