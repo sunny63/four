@@ -10,9 +10,9 @@ export default class StatisticZDP {
         public readonly valuesMBZWithColor: ValueWithColor[] = [],
         public readonly valuesIFBZWithColor: ValueWithColor[] = [],
         public color: string = '',
-        public p1: number = 0,
-        public p2: number = 0,
-        public p3: number = 0,
-        public p4: number = 0,
+        public p1: number | null = null,
+        public p2: number | null = null,
+        public p3: number | null = null,
+        public p4: number | null = null,
     ) {}
 }

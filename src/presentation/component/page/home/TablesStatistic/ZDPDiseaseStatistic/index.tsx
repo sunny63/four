@@ -13,6 +13,8 @@ import AppController from 'presentation/controller/app/AppController';
 import Row from './Row';
 import StatisticZDP from '../../../../../../domain/entity/period/StatisticZDP';
 import ValueWithColor from '../../../../../../domain/entity/attribute/ValueWithColor';
+import Disease from '../../../../../../domain/entity/disease/Disease';
+import Attribute from '../../../../../../domain/entity/attribute/Attribute';
 
 interface Column {
     id:
@@ -72,7 +74,7 @@ const PeriodTable = observer(() => {
         const valuesWithColorIFBZ: ValueWithColor[] = [];
         const valuesWithColorMBZ: ValueWithColor[] = [];
 
-        for (let d = 0; d < valuesIFBZ.length - 1; d++) {
+        for (let d = 0; d <= valuesIFBZ.length - 1; d++) {
             valuesWithColorIFBZ.push(new ValueWithColor(valuesIFBZ[d], white));
             valuesWithColorMBZ.push(new ValueWithColor(valuesMBZ[d], white));
         }
@@ -90,7 +92,13 @@ const PeriodTable = observer(() => {
         }
     });
 
-    for (let i = 0; i < statisticsZDP.length - 1; i++) {
+    let countAll = 0;
+    let p1All = 0;
+    let p2All = 0;
+    let p3All = 0;
+    let p4All = 0;
+
+    for (let i = 0; i < statisticsZDP.length; i++) {
         const ail = statisticsZDP[i].disease;
         let count = 0;
         let p1 = 0;
@@ -129,15 +137,79 @@ const PeriodTable = observer(() => {
                         MBZvalues[index].color = red;
                     }
                 });
+                if (statisticsZDP.length === 1 || j === statisticsZDP.length - 1) {
+                    countAll++;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    statisticsZDP[i].p1 = ((p1 / count) * 100).toFixed(2);
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    statisticsZDP[i].p2 = ((p2 / count) * 100).toFixed(2);
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    statisticsZDP[i].p3 = ((p3 / count) * 100).toFixed(2);
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    statisticsZDP[i].p4 = ((p4 / count) * 100).toFixed(2);
+
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    p1All += (p1 / count) * 100;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    p2All += (p2 / count) * 100;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    p3All += (p3 / count) * 100;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    p4All += (p4 / count) * 100;
+                }
             } else {
-                statisticsZDP[i].p1 = p1 / count;
-                statisticsZDP[i].p2 = p2 / count;
-                statisticsZDP[i].p3 = p3 / count;
-                statisticsZDP[i].p4 = p4 / count;
+                countAll++;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                statisticsZDP[i].p1 = ((p1 / count) * 100).toFixed(2);
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                statisticsZDP[i].p2 = ((p2 / count) * 100).toFixed(2);
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                statisticsZDP[i].p3 = ((p3 / count) * 100).toFixed(2);
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                statisticsZDP[i].p4 = ((p4 / count) * 100).toFixed(2);
+
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                p1All += (p1 / count) * 100;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                p2All += (p2 / count) * 100;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                p3All += (p3 / count) * 100;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                p4All += (p4 / count) * 100;
                 break;
             }
         }
     }
+    p1All = (p1All / countAll).toFixed(2);
+    p2All = (p2All / countAll).toFixed(2);
+    p3All = (p3All / countAll).toFixed(2);
+    p4All = (p4All / countAll).toFixed(2);
+
+    const d = new Disease('', 'Все заболевания');
+    const a = new Attribute('', 'Все признаки', { from: 0, to: 0 }, { from: 0, to: 0 });
+
+    const vc = new ValueWithColor({ from: 0, to: 0 }, white);
+    const arr: ValueWithColor[] = [];
+    arr.push(vc);
+
+    const stat = new StatisticZDP('0', d, a, arr, arr, white, p1All, p2All, p3All, p4All);
+    statisticsZDP.unshift(stat);
 
     return (
         <Paper>
