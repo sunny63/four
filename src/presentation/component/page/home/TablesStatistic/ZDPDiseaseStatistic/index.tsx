@@ -11,20 +11,33 @@ import Paper from '@material-ui/core/Paper';
 import { useService } from 'presentation/context/Container';
 import AppController from 'presentation/controller/app/AppController';
 import Row from './Row';
-import StatisticPeriod from '../../../../../../domain/entity/period/StatisticPeriod';
+import StatisticZDP from '../../../../../../domain/entity/period/StatisticZDP';
+import ValueWithColor from '../../../../../../domain/entity/attribute/ValueWithColor';
 
 interface Column {
-    id: 'disease' | 'CHPD' | 'ZDP' | 'percent1' | 'percent2' | 'percent3' | 'percent4';
+    id:
+        | 'disease'
+        | 'attribute'
+        | 'CHPD'
+        | 'ZDPmbz'
+        | 'ZDPifbz'
+        | 'color'
+        | 'percent1'
+        | 'percent2'
+        | 'percent3'
+        | 'percent4';
     label: string;
 }
 
 const COLUMNS: Column[] = [
     { id: 'disease', label: 'Заболевание' },
-    { id: 'CHPD', label: 'Номер периода' },
-    { id: 'ZDP', label: 'ЗДП ИФБЗ/ЗДП МБЗ' },
+    { id: 'attribute', label: 'Признак' },
+    { id: 'CHPD', label: 'Период' },
+    { id: 'ZDPmbz', label: 'ЗДП МБЗ' },
+    { id: 'ZDPifbz', label: 'ЗДП ИФБЗ' },
     { id: 'percent1', label: 'Процент тождественного совпадения' },
-    { id: 'percent2', label: 'Процент ЗДПифбз подмножество ЗДПмбз' },
-    { id: 'percent3', label: 'Процент ЗДПмбз подмножество ЗДПифбз' },
+    { id: 'percent2', label: 'Процент ЗДПифбз ⊂ ЗДПмбз' },
+    { id: 'percent3', label: 'Процент ЗДПмбз ⊂ ЗДПифбз' },
     { id: 'percent4', label: 'Процент остальных случаев' },
 ];
 
@@ -34,7 +47,12 @@ const PeriodTable = observer(() => {
     const [rowsPerPage, setRowsPerPage] = useState(1000);
     const periodsForTable = periods;
     const indPeriodsForTable = indPeriods;
-    const periodsStatistic: StatisticPeriod[] = [];
+    const statisticsZDP: StatisticZDP[] = [];
+    const red = '#c91407';
+    const green = '#82c907';
+    const blue = '#0785c9';
+    const yellow = '#f6d70b';
+    const white = '#ffffff';
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -45,65 +63,77 @@ const PeriodTable = observer(() => {
         setPage(0);
     };
 
-    let k = 0;
-    periodsForTable.forEach((period) => {
+    periodsForTable.forEach((period, index) => {
         const { amount } = period;
-        const amountInd = indPeriodsForTable[k].amount;
+        const amountInd = indPeriodsForTable[index].amount;
+
+        const valuesIFBZ = indPeriodsForTable[index].values;
+        const valuesMBZ = period.values;
+        const valuesWithColorIFBZ: ValueWithColor[] = [];
+        const valuesWithColorMBZ: ValueWithColor[] = [];
+
+        for (let d = 0; d < valuesIFBZ.length - 1; d++) {
+            valuesWithColorIFBZ.push(new ValueWithColor(valuesIFBZ[d], white));
+            valuesWithColorMBZ.push(new ValueWithColor(valuesMBZ[d], white));
+        }
 
         if (amount === amountInd) {
-            const p = new StatisticPeriod(
+            const p = new StatisticZDP(
                 period.id,
                 period.disease,
                 period.attribute,
-                period.amount,
-                amountInd,
-                [],
-                [],
-                'primary',
+                valuesWithColorMBZ,
+                valuesWithColorIFBZ,
+                white,
             );
-            periodsStatistic.push(p);
-        } else {
-            const p = new StatisticPeriod(
-                period.id,
-                period.disease,
-                period.attribute,
-                period.amount,
-                amountInd,
-                [],
-                [],
-                'secondary',
-            );
-            periodsStatistic.push(p);
+            statisticsZDP.push(p);
         }
-        k++;
     });
 
-    for (let i = 0; i < periodsForTable.length - 1; i++) {
-        const ail = periodsForTable[i].disease;
-        let countP = 0;
-        let countTrue = 0;
-        if (i !== 0 && ail === periodsForTable[i - 1].disease) {
+    for (let i = 0; i < statisticsZDP.length - 1; i++) {
+        const ail = statisticsZDP[i].disease;
+        let count = 0;
+        let p1 = 0;
+        let p2 = 0;
+        let p3 = 0;
+        let p4 = 0;
+        if (i !== 0 && ail === statisticsZDP[i - 1].disease) {
             // eslint-disable-next-line no-continue
             continue;
         }
-        for (let j = i; j < periodsForTable.length; j++) {
-            if (ail === periodsForTable[j].disease) {
-                if (periodsForTable[j].amount === indPeriodsForTable[j].amount) {
-                    countTrue++;
-                }
+        for (let j = i; j < statisticsZDP.length; j++) {
+            if (ail === statisticsZDP[j].disease) {
+                const IFBZvalues = statisticsZDP[j].valuesIFBZWithColor;
+                const MBZvalues = statisticsZDP[j].valuesMBZWithColor;
+
+                // eslint-disable-next-line @typescript-eslint/no-loop-func
+                IFBZvalues.forEach((valueN, index) => {
+                    count++;
+                    const valueIFBZ = valueN.value;
+                    const valueMBZ = MBZvalues[index].value;
+                    if (valueIFBZ.from === valueMBZ.from && valueIFBZ.to === valueMBZ.to) {
+                        p1++;
+                        IFBZvalues[index].color = green;
+                        MBZvalues[index].color = green;
+                    } else if (valueIFBZ.from >= valueMBZ.from && valueIFBZ.to <= valueMBZ.to) {
+                        p2++;
+                        IFBZvalues[index].color = blue;
+                        MBZvalues[index].color = blue;
+                    } else if (valueMBZ.from >= valueIFBZ.from && valueMBZ.to <= valueIFBZ.to) {
+                        p3++;
+                        IFBZvalues[index].color = yellow;
+                        MBZvalues[index].color = yellow;
+                    } else {
+                        p4++;
+                        IFBZvalues[index].color = red;
+                        MBZvalues[index].color = red;
+                    }
+                });
             } else {
-                break;
-            }
-            countP++;
-            if (j === periodsForTable.length - 1) {
-                break;
-            }
-        }
-        const percent = countTrue / countP;
-        for (let s = i; s < periodsForTable.length; s++) {
-            if (ail === periodsForTable[s].disease) {
-                periodsStatistic[s].pDisease = percent;
-            } else {
+                statisticsZDP[i].p1 = p1 / count;
+                statisticsZDP[i].p2 = p2 / count;
+                statisticsZDP[i].p3 = p3 / count;
+                statisticsZDP[i].p4 = p4 / count;
                 break;
             }
         }
@@ -121,7 +151,7 @@ const PeriodTable = observer(() => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {periodsStatistic
+                        {statisticsZDP
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((period) => (
                                 <Row key={period.id} period={period} />
