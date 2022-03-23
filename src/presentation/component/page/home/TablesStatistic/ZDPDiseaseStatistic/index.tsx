@@ -196,9 +196,17 @@ const PeriodTable = observer(() => {
             }
         }
     }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     p1All = (p1All / countAll).toFixed(2);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     p2All = (p2All / countAll).toFixed(2);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     p3All = (p3All / countAll).toFixed(2);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     p4All = (p4All / countAll).toFixed(2);
 
     const d = new Disease('', 'Все заболевания');
