@@ -9,14 +9,11 @@ type PropsT = {
 
 const Row: FC<PropsT> = (props) => {
     const { period } = props;
-    const { disease, amountMBZ, amountIFBZ, pDisease } = period;
+    const { disease, pDisease } = period;
 
     return (
         <TableRow>
             <TableCell>{disease.name}</TableCell>
-            <TableCell>
-                {amountMBZ} / {amountIFBZ}
-            </TableCell>
             <TableCell>{pDisease}</TableCell>
         </TableRow>
     );

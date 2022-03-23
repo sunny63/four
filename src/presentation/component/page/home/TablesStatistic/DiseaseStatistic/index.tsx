@@ -14,13 +14,12 @@ import Row from './Row';
 import StatisticPeriod from '../../../../../../domain/entity/period/StatisticPeriod';
 
 interface Column {
-    id: 'disease' | 'CHPD' | 'percent';
+    id: 'disease' | 'percent';
     label: string;
 }
 
 const COLUMNS: Column[] = [
     { id: 'disease', label: 'Заболевание' },
-    { id: 'CHPD', label: 'ЧПД МБД / ЧПД ИФБЗ' },
     { id: 'percent', label: 'Процент совпадения ЧПД' },
 ];
 
@@ -31,6 +30,7 @@ const PeriodTable = observer(() => {
     const periodsForTable = periods;
     const indPeriodsForTable = indPeriods;
     const periodsStatistic: StatisticPeriod[] = [];
+    const periodsStatisticFromDisease: StatisticPeriod[] = [];
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -105,6 +105,14 @@ const PeriodTable = observer(() => {
         }
     }
 
+    for (let q = 0; q < periodsForTable.length - 1; q++) {
+        if (q !== 0 && periodsForTable[q].disease === periodsForTable[q - 1].disease) {
+            // eslint-disable-next-line no-continue
+            continue;
+        }
+        periodsStatisticFromDisease.push(periodsStatistic[q]);
+    }
+
     return (
         <Paper>
             <TableContainer component={Paper}>
@@ -117,7 +125,7 @@ const PeriodTable = observer(() => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {periodsStatistic
+                        {periodsStatisticFromDisease
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((period) => (
                                 <Row key={period.id} period={period} />

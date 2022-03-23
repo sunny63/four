@@ -22,7 +22,6 @@ interface Column {
 
 const COLUMNS: Column[] = [
     { id: 'attribute', label: 'Признак' },
-    { id: 'CHPD', label: 'ЧПД МБД / ЧПД ИФБЗ' },
     { id: 'percent', label: 'Процент совпадения ЧПД' },
 ];
 
@@ -33,6 +32,7 @@ const PeriodTable = observer(() => {
     const periodsForTable = periods;
     const indPeriodsForTable = indPeriods;
     const periodsStatistic: StatisticPeriod[] = [];
+    const periodsStatisticFromAttribute: StatisticPeriod[] = [];
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -123,8 +123,16 @@ const PeriodTable = observer(() => {
         { from: 0, to: 0 },
     );
 
-    const stat = new StatisticPeriod('0', d, a, null, null, [], [], 'secondary', 0, p);
-    periodsStatistic.unshift(stat);
+    const stat = new StatisticPeriod('0', d, a, 2, 2, [], [], 'secondary', 0, p);
+
+    for (let q = 0; q < periodsForTable.length - 1; q++) {
+        if (q !== 0 && periodsForTable[q].attribute === periodsForTable[0].attribute) {
+            // eslint-disable-next-line no-continue
+            break;
+        }
+        periodsStatisticFromAttribute.push(periodsStatistic[q]);
+    }
+    periodsStatisticFromAttribute.unshift(stat);
 
     return (
         <Paper>
@@ -138,7 +146,7 @@ const PeriodTable = observer(() => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {periodsStatistic
+                        {periodsStatisticFromAttribute
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((period) => (
                                 <Row key={period.id} period={period} />
