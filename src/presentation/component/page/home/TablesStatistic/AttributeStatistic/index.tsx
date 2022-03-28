@@ -16,13 +16,15 @@ import Disease from '../../../../../../domain/entity/disease/Disease';
 import Attribute from '../../../../../../domain/entity/attribute/Attribute';
 
 interface Column {
-    id: 'attribute' | 'CHPD' | 'percent';
+    id: 'attribute' | 'CHPD' | 'percent' | 'percent1' | 'percent2';
     label: string;
 }
 
 const COLUMNS: Column[] = [
     { id: 'attribute', label: 'Признак' },
     { id: 'percent', label: 'Процент совпадения ЧПД' },
+    { id: 'percent1', label: 'ЧПДмбз > ЧПДифбз' },
+    { id: 'percent2', label: 'ЧПДмбз < ЧПДифбз' },
 ];
 
 const PeriodTable = observer(() => {
@@ -76,6 +78,9 @@ const PeriodTable = observer(() => {
         k++;
     });
 
+    let p1 = 0;
+    let p2 = 0;
+
     for (let i = 0; i < periodsForTable.length - 1; i++) {
         const { attribute } = periodsForTable[i];
         let countP = 0;
@@ -88,7 +93,12 @@ const PeriodTable = observer(() => {
             if (attribute === periodsForTable[j].attribute) {
                 if (periodsForTable[j].amount === indPeriodsForTable[j].amount) {
                     countTrue++;
+                } else if (periodsForTable[j].amount > indPeriodsForTable[j].amount) {
+                    p1++;
+                } else if (periodsForTable[j].amount < indPeriodsForTable[j].amount) {
+                    p2++;
                 }
+
                 countP++;
             }
 
@@ -97,14 +107,20 @@ const PeriodTable = observer(() => {
             }
         }
         const percent = countTrue / countP;
+        const percent1 = p1 / countP;
+        const percent2 = p2 / countP;
         for (let s = i; s < periodsForTable.length; s++) {
             if (attribute === periodsForTable[s].attribute) {
                 periodsStatistic[s].pAttribute = percent;
+                periodsStatistic[s].p1 = percent1;
+                periodsStatistic[s].p2 = percent2;
             }
         }
     }
 
     let p = 0;
+    let p1All = 0;
+    let p2All = 0;
     let count = 0;
     for (let y = 0; y < periodsForTable.length - 1; y++) {
         if (y !== 0 && periodsForTable[y].attribute === periodsForTable[0].attribute) {
@@ -112,9 +128,13 @@ const PeriodTable = observer(() => {
             break;
         }
         p += periodsStatistic[y].pAttribute;
+        p1All += periodsStatistic[y].p1;
+        p2All += periodsStatistic[y].p2;
         count++;
     }
     p /= count;
+    p1All /= count;
+    p2All /= count;
     const d = new Disease('', '');
     const a = new Attribute(
         '',
@@ -123,7 +143,7 @@ const PeriodTable = observer(() => {
         { from: 0, to: 0 },
     );
 
-    const stat = new StatisticPeriod('0', d, a, 2, 2, [], [], 'secondary', 0, p);
+    const stat = new StatisticPeriod('0', d, a, 2, 2, [], [], 'secondary', 0, p, p1All, p2All);
 
     for (let q = 0; q < periodsForTable.length - 1; q++) {
         if (q !== 0 && periodsForTable[q].attribute === periodsForTable[0].attribute) {
@@ -132,6 +152,7 @@ const PeriodTable = observer(() => {
         }
         periodsStatisticFromAttribute.push(periodsStatistic[q]);
     }
+
     periodsStatisticFromAttribute.unshift(stat);
 
     return (

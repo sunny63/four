@@ -92,6 +92,52 @@ const mergeAlternatives = (periodsAmount: number, alternatives: Alternative[]): 
     return Alternative.CreateEmpty();
 };
 
+const mergeAlternatives2 = (
+    periodsAmount: number,
+    alternatives1: Alternative[],
+    alternatives2: Alternative[],
+): Alternative[] => {
+    const alternatives: Alternative[] = [];
+
+    alternatives1.forEach((alternative1) => {
+        alternatives2.forEach((alternative2) => {
+            const alternative = mergeAlternatives(periodsAmount, [alternative1, alternative2]);
+
+            if (!alternative.isEmpty()) {
+                alternatives.push(alternative);
+            }
+        });
+    });
+
+    return alternatives;
+};
+
+const getMergedAlternatives = (
+    alternatives1: Alternative[],
+    alternatives2: Alternative[],
+): Alternative[] => {
+    const alternatives: Alternative[] = [];
+
+    for (let i = 1; i <= 5; i++) {
+        const alts1 = alternatives1.filter(({ periodsAmount }) => periodsAmount === i);
+        const alts2 = alternatives2.filter(({ periodsAmount }) => periodsAmount === i);
+
+        if (alts1.length > 0 && alts2.length > 0) {
+            const alts = mergeAlternatives2(i, alts1, alts2);
+
+            alternatives.push(...alts);
+        }
+    }
+
+    return alternatives;
+};
+
+const checkFullBounds = (bounds: Bound[]): boolean => {
+    const largeBounds = bounds.find(({ upperBound }) => upperBound > 12);
+
+    return !largeBounds;
+};
+
 const getValuesForMomentsInPeriod = (moments: MomentOfObservation[]): Value => {
     let minValue = moments[0].value;
     let maxValue = moments[0].value;
@@ -165,9 +211,12 @@ const getAlternativesFor5Periods = (momentsOfObservation: MomentOfObservation[])
                             upperBound: moments5[moments5.length - 1].duration - fourthBound,
                         };
                         const bounds: Bound[] = [bound1, bound2, bound3, bound4, bound5];
-                        const alternative = new Alternative(5, values, bounds);
 
-                        alternatives.push(alternative);
+                        if (checkFullBounds(bounds)) {
+                            const alternative = new Alternative(5, values, bounds);
+
+                            alternatives.push(alternative);
+                        }
                     }
                 }
             }
@@ -220,9 +269,12 @@ const getAlternativesFor4Periods = (momentsOfObservation: MomentOfObservation[])
                         upperBound: moments4[moments4.length - 1].duration - thirdBound,
                     };
                     const bounds: Bound[] = [bound1, bound2, bound3, bound4];
-                    const alternative = new Alternative(5, values, bounds);
 
-                    alternatives.push(alternative);
+                    if (checkFullBounds(bounds)) {
+                        const alternative = new Alternative(4, values, bounds);
+
+                        alternatives.push(alternative);
+                    }
                 }
             }
         }
@@ -264,9 +316,12 @@ const getAlternativesFor3Periods = (momentsOfObservation: MomentOfObservation[])
                     upperBound: moments3[moments3.length - 1].duration - secondBound,
                 };
                 const bounds: Bound[] = [bound1, bound2, bound3];
-                const alternative = new Alternative(5, values, bounds);
 
-                alternatives.push(alternative);
+                if (checkFullBounds(bounds)) {
+                    const alternative = new Alternative(3, values, bounds);
+
+                    alternatives.push(alternative);
+                }
             }
         }
     }
@@ -297,9 +352,12 @@ const getAlternativesFor2Periods = (momentsOfObservation: MomentOfObservation[])
                 upperBound: moments2[moments2.length - 1].duration - firstBound,
             };
             const bounds = [bound1, bound2];
-            const alternative = new Alternative(5, values, bounds);
 
-            alternatives.push(alternative);
+            if (checkFullBounds(bounds)) {
+                const alternative = new Alternative(2, values, bounds);
+
+                alternatives.push(alternative);
+            }
         }
     }
 
@@ -319,20 +377,19 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
                 lowerBound,
                 upperBound,
             };
-            const alternative = new Alternative(1, values, [bound]);
 
-            alternatives.push(alternative);
+            if (checkFullBounds([bound])) {
+                const alternative = new Alternative(1, values, [bound]);
+
+                alternatives.push(alternative);
+            }
         }
 
         if (i === 2) {
             const alternatives2 = getAlternativesFor2Periods(momentsOfObservation);
 
             if (alternatives2.length > 0) {
-                const mergedAlternative = mergeAlternatives(2, alternatives2);
-
-                if (!mergedAlternative.isEmpty()) {
-                    alternatives.push(mergedAlternative);
-                }
+                alternatives.push(...alternatives2);
             }
         }
 
@@ -340,11 +397,7 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
             const alternatives3 = getAlternativesFor3Periods(momentsOfObservation);
 
             if (alternatives3.length > 0) {
-                const mergedAlternatives = mergeAlternatives(3, alternatives3);
-
-                if (!mergedAlternatives.isEmpty()) {
-                    alternatives.push(mergedAlternatives);
-                }
+                alternatives.push(...alternatives3);
             }
         }
 
@@ -352,11 +405,7 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
             const alternatives4 = getAlternativesFor4Periods(momentsOfObservation);
 
             if (alternatives4.length > 0) {
-                const mergedAlternatives = mergeAlternatives(4, alternatives4);
-
-                if (!mergedAlternatives.isEmpty()) {
-                    alternatives.push(mergedAlternatives);
-                }
+                alternatives.push(...alternatives4);
             }
         }
 
@@ -364,11 +413,7 @@ const getAlternatives = (momentsOfObservation: MomentOfObservation[]): Alternati
             const alternatives5 = getAlternativesFor5Periods(momentsOfObservation);
 
             if (alternatives5.length > 0) {
-                const mergedAlternatives = mergeAlternatives(5, alternatives5);
-
-                if (!mergedAlternatives.isEmpty()) {
-                    alternatives.push(mergedAlternatives);
-                }
+                alternatives.push(...alternatives5);
             }
         }
     }
@@ -393,7 +438,7 @@ scope.onmessage = ({ data: { indMoments } }) => {
         if (alternativesRecord[diseaseName]) {
             if (alternativesRecord[diseaseName][attributeName]) {
                 const prevAlternatives = alternativesRecord[diseaseName][attributeName];
-                const currentAlternatives = prevAlternatives.concat(alternatives);
+                const currentAlternatives = getMergedAlternatives(prevAlternatives, alternatives);
 
                 alternativesRecord[diseaseName][attributeName] = currentAlternatives;
             } else {
@@ -416,58 +461,7 @@ scope.onmessage = ({ data: { indMoments } }) => {
                 { from: 0, to: 0 },
             );
 
-            const alternatives1 = alternatives.filter(({ periodsAmount }) => periodsAmount === 1);
-            const alternatives2 =
-                alternatives.filter(({ periodsAmount }) => periodsAmount === 2) || [];
-            const alternatives3 =
-                alternatives.filter(({ periodsAmount }) => periodsAmount === 3) || [];
-            const alternatives4 =
-                alternatives.filter(({ periodsAmount }) => periodsAmount === 4) || [];
-            const alternatives5 =
-                alternatives.filter(({ periodsAmount }) => periodsAmount === 5) || [];
-            const mergedAlternatives: Alternative[] = [];
-
-            if (alternatives1.length > 0) {
-                const alternative1 = mergeAlternatives(1, alternatives1);
-
-                if (!alternative1.isEmpty()) {
-                    mergedAlternatives.push(alternative1);
-                }
-            }
-
-            if (alternatives2.length > 0) {
-                const alternative2 = mergeAlternatives(2, alternatives2);
-
-                if (!alternative2.isEmpty()) {
-                    mergedAlternatives.push(alternative2);
-                }
-            }
-
-            if (alternatives3.length > 0) {
-                const alternative3 = mergeAlternatives(3, alternatives3);
-
-                if (!alternative3.isEmpty()) {
-                    mergedAlternatives.push(alternative3);
-                }
-            }
-
-            if (alternatives4.length > 0) {
-                const alternative4 = mergeAlternatives(4, alternatives4);
-
-                if (!alternative4.isEmpty()) {
-                    mergedAlternatives.push(alternative4);
-                }
-            }
-
-            if (alternatives5.length > 0) {
-                const alternative5 = mergeAlternatives(5, alternatives5);
-
-                if (!alternative5.isEmpty()) {
-                    mergedAlternatives.push(alternative5);
-                }
-            }
-
-            const periods = mergedAlternatives.map(
+            const periods = alternatives.map(
                 ({ periodsAmount, bounds, values }) =>
                     new Period(v4(), disease, attribute, periodsAmount, values, bounds),
             );

@@ -14,5 +14,7 @@ export default class StatisticPeriod {
         public readonly color: string = '',
         public pDisease: number = 0,
         public pAttribute: number = 0,
+        public p1: number = 0,
+        public p2: number = 0,
     ) {}
 }

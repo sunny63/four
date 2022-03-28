@@ -9,12 +9,14 @@ type PropsT = {
 
 const Row: FC<PropsT> = (props) => {
     const { period } = props;
-    const { attribute, pAttribute } = period;
+    const { attribute, pAttribute, p1, p2 } = period;
 
     return (
         <TableRow>
             <TableCell>{attribute.name}</TableCell>
             <TableCell>{pAttribute}</TableCell>
+            <TableCell>{p1}</TableCell>
+            <TableCell>{p2}</TableCell>
         </TableRow>
     );
 };
