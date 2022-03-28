@@ -15,8 +15,8 @@ const Row: FC<PropsT> = (props) => {
         <TableRow>
             <TableCell>{attribute.name}</TableCell>
             <TableCell>{pAttribute}</TableCell>
-            <TableCell>{p1}</TableCell>
-            <TableCell>{p2}</TableCell>
+            <TableCell>{p1}%</TableCell>
+            <TableCell>{p2}%</TableCell>
         </TableRow>
     );
 };

@@ -78,13 +78,12 @@ const PeriodTable = observer(() => {
         k++;
     });
 
-    let p1 = 0;
-    let p2 = 0;
-
     for (let i = 0; i < periodsForTable.length - 1; i++) {
         const { attribute } = periodsForTable[i];
         let countP = 0;
         let countTrue = 0;
+        let p1 = 0;
+        let p2 = 0;
         if (i !== 0 && attribute === periodsForTable[0].attribute) {
             // eslint-disable-next-line no-continue
             break;
@@ -111,9 +110,15 @@ const PeriodTable = observer(() => {
         const percent2 = p2 / countP;
         for (let s = i; s < periodsForTable.length; s++) {
             if (attribute === periodsForTable[s].attribute) {
-                periodsStatistic[s].pAttribute = percent;
-                periodsStatistic[s].p1 = percent1;
-                periodsStatistic[s].p2 = percent2;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                periodsStatistic[s].pAttribute = percent * 100;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                periodsStatistic[s].p1 = percent1 * 100;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                periodsStatistic[s].p2 = percent2 * 100;
             }
         }
     }
@@ -138,10 +143,20 @@ const PeriodTable = observer(() => {
     const d = new Disease('', '');
     const a = new Attribute(
         '',
-        'Общий процент совпадений ЧПД',
+        'Статистика по всем парам ЧПДмбз / ЧПДифбз',
         { from: 0, to: 0 },
         { from: 0, to: 0 },
     );
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    p = p.toFixed(2);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    p1All = p1All.toFixed(2);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    p2All = p2All.toFixed(2);
 
     const stat = new StatisticPeriod('0', d, a, 2, 2, [], [], 'secondary', 0, p, p1All, p2All);
 

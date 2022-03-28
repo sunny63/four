@@ -14,13 +14,15 @@ import Row from './Row';
 import StatisticPeriod from '../../../../../../domain/entity/period/StatisticPeriod';
 
 interface Column {
-    id: 'disease' | 'percent';
+    id: 'disease' | 'percent' | 'percent1' | 'percent2';
     label: string;
 }
 
 const COLUMNS: Column[] = [
     { id: 'disease', label: 'Заболевание' },
     { id: 'percent', label: 'Процент совпадения ЧПД' },
+    { id: 'percent1', label: 'ЧПДмбз > ЧПДифбз' },
+    { id: 'percent2', label: 'ЧПДмбз < ЧПДифбз' },
 ];
 
 const PeriodTable = observer(() => {
@@ -78,6 +80,8 @@ const PeriodTable = observer(() => {
         const ail = periodsForTable[i].disease;
         let countP = 0;
         let countTrue = 0;
+        let p1 = 0;
+        let p2 = 0;
         if (i !== 0 && ail === periodsForTable[i - 1].disease) {
             // eslint-disable-next-line no-continue
             continue;
@@ -86,6 +90,10 @@ const PeriodTable = observer(() => {
             if (ail === periodsForTable[j].disease) {
                 if (periodsForTable[j].amount === indPeriodsForTable[j].amount) {
                     countTrue++;
+                } else if (periodsForTable[j].amount > indPeriodsForTable[j].amount) {
+                    p1++;
+                } else if (periodsForTable[j].amount < indPeriodsForTable[j].amount) {
+                    p2++;
                 }
             } else {
                 break;
@@ -96,9 +104,13 @@ const PeriodTable = observer(() => {
             }
         }
         const percent = countTrue / countP;
+        const percent1 = p1 / countP;
+        const percent2 = p2 / countP;
         for (let s = i; s < periodsForTable.length; s++) {
             if (ail === periodsForTable[s].disease) {
-                periodsStatistic[s].pDisease = percent;
+                periodsStatistic[s].pDisease = percent * 100;
+                periodsStatistic[s].p1 = percent1 * 100;
+                periodsStatistic[s].p2 = percent2 * 100;
             } else {
                 break;
             }
